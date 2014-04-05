@@ -46,24 +46,28 @@
       Templates are in the /templates folder (but you could also
       have templates inline in this html file if you'd like).
     -->
-    <!--ion-nav-view></ion-nav-view-->
-    <div class="bar bar-header bar-positive">
-      <button class="button button-clear icon ion-ios7-search-strong"></button>
-      <h1 class="title">Menu-Web</h1>
-      <button class="button button-icon icon ion-navicon" ></button>
-    </div>
+    <ion-nav-view>
+      <div class="bar bar-header bar-positive">
+        <button class="button button-clear icon ion-ios7-search-strong"></button>
+        <h1 class="title">Menu-Web</h1>
+        <button class="button button-icon icon ion-navicon" ></button>
+      </div>
 
-    <!-- ion-content has-header="true">
-      <form class="list">
-        <label for="a" class="item item-input">Para Compartir<input name="a" type="text"></label>
-        
-      </form>
-    </ion-content -->
-    <ion-content scroll="false">
-      <div id="map"></div>
-    </ion-content>
-    <ion-footer-bar class="bar bar-positive">
-      <a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a>
-    </ion-footer-bar>
+      <!-- ion-content has-header="true">
+        <form class="list">
+          <label for="a" class="item item-input">Para Compartir<input name="a" type="text"></label>
+          
+        </form>
+      </ion-content -->
+      <ion-content scroll="false">
+        <div id="map">
+          <iframe width="100%" height="95%" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" src="https://www.google.com/maps?t=m&amp;ie=UTF8&amp;ll=41.39479,2.148768&amp;spn=0.123624,0.308647&amp;z=12&amp;output=embed">
+          </iframe>
+        </div>
+      </ion-content>
+      <ion-footer-bar class="bar bar-positive">
+        <a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a>
+      </ion-footer-bar>
+    </ion-nav-view>
   </body>
 </html>
