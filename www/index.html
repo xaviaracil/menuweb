@@ -54,10 +54,11 @@
         <div id="map">
           <iframe width="100%" height="95%" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" src="https://www.google.com/maps?t=m&amp;ie=UTF8&amp;ll=41.39479,2.148768&amp;spn=0.123624,0.308647&amp;z=12&amp;output=embed">
           </iframe>
-          <a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a>
+
         </div>
       </ion-content>
       <ion-footer-bar class="bar bar-positive">
+      <a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a> <!-- El localizador, tiene que estar sobre el mapa, pero si lo saco del footer y lo pongo en el iframe, no lo veo -->
       </ion-footer-bar>
     <!-- /ion-nav-view -->
     <!-- End Map View -->
