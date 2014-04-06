@@ -67,7 +67,7 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
 
 });
 
-// Arantxa JS for #map 
+// Arantxa JS for #map:  No funciona, he acabado incrustando el mapa con un iframe
 
 angular.module('ionic.example', ['ionic'])
 
