@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title>Menu-Web App</title>
+    <title>Restaurants List</title>
 
     <!-- ionic css -->
     <link href="lib/css/ionic.css" rel="stylesheet">
+    <link href="http://code.ionicframework.com/1.0.0-beta.1/css/ionic.min.css" rel="stylesheet">
 
     <!-- your app's css -->
     <link href="css/app.css" rel="stylesheet">
@@ -21,36 +22,52 @@
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
     <script src="js/controllers.js"></script>
-    <!-- google maps javascript -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es&sensor=true"></script>
+
+    <script src="http://code.ionicframework.com/1.0.0-beta.1/js/ionic.bundle.min.js"></script>
 
   </head>
   <!-- 
     'starter' is the name of this angular module (js/app.js)
   -->
-  <body ng-app="starter" animation="slide-left-right-ios7">
+  <body ng-controller="MyCtrl">
 <!-- ion-view title="Restaurant List" --> <!--  Habilitar si empleamos Views -->
-  <ion-content has-header="true" has-tabs="true">
-
-    <ion-list>
-
-      <ion-item ng-repeat="pet in pets" type="item-text-wrap" href="#/tab/pet/{{pet.id}}">
-        <h3>{{pet.title}}</h3>
-        <p>{{pet.description}}</p>
-      </ion-item>
+    <ion-header-bar class="bar bar-header bar-positive">
+    <button class="button button-clear icon ion-ios7-arrow-back"><a href="index.html"></a></button> 
+      <h1 class="title">Restaurants List</h1>
+      <button class="button button-clear" ><a href="index.html"></a>Map</button>
+    </ion-header-bar>
+    <ion-content>
       
-    </ion-list>
-
-  </ion-content>
-<!-- /ion-view -->
-<!-- Restaurants list View -->
-    <ion-nav-view title="">
-    <ion-content has-header="true">
-        <form class="list">
-          <label for="a" class="item item-input">Para Compartir<input name="a" type="text"></label>
-          
-        </form>
-      </ion-content>
-    </ion-nav-view>
+      <ul class="list">
+        <li>
+          <a ng-repeat="item in items" 
+           href="#/{{item.id}}"
+           class="item item-thumbnail-left">
+          <img ng-src="{{ item.image }}">
+          <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+          <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+          </a>
+        </li>
+        <li>
+          <a ng-repeat="item in items" 
+           href="#/{{item.id}}"
+           class="item item-thumbnail-left">
+          <img ng-src="{{ item.image }}">
+          <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+          <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+          </a>
+        </li>
+        <li>
+          <a ng-repeat="item in items" 
+           href="#/{{item.id}}"
+           class="item item-thumbnail-left">
+          <img ng-src="{{ item.image }}">
+          <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+          <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+          </a>
+        </li>
+      </ul>
+    </ion-content>
+    <!-- /ion-nav-view -->
   </body>
 </html>
