@@ -36,38 +36,69 @@
       <h1 class="title">Restaurants List</h1>
       <button class="button button-clear" ><a href="index.html"></a>Map</button>
     </ion-header-bar>
-    <ion-content>
-      
-      <ul class="list">
-        <li>
-          <a ng-repeat="item in items" 
-           href="#/{{item.id}}"
-           class="item item-thumbnail-left">
-          <img ng-src="{{ item.image }}">
-          <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
-          <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
-          </a>
-        </li>
-        <li>
-          <a ng-repeat="item in items" 
-           href="#/{{item.id}}"
-           class="item item-thumbnail-left">
-          <img ng-src="{{ item.image }}">
-          <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
-          <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
-          </a>
-        </li>
-        <li>
-          <a ng-repeat="item in items" 
-           href="#/{{item.id}}"
-           class="item item-thumbnail-left">
-          <img ng-src="{{ item.image }}">
-          <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
-          <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
-          </a>
-        </li>
-      </ul>
+    <ion-content class="scroll-content has-header">
+      <div class="scroll"> 
+        <ul class="list">
+          <li>
+            <a ng-repeat="item in items" 
+             href="#/{{item.id}}"
+             class="item item-thumbnail-left">
+            <img ng-src="{{ item.image }}">
+            <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+            <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+            </a>
+          </li>
+          <li>
+            <a ng-repeat="item in items" 
+             href="#/{{item.id}}"
+             class="item item-thumbnail-left">
+            <img ng-src="{{ item.image }}">
+            <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+            <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+            </a>
+          </li>
+          <li>
+            <a ng-repeat="item in items" 
+             href="#/{{item.id}}"
+             class="item item-thumbnail-left">
+            <img ng-src="{{ item.image }}">
+            <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+            <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+            </a>
+          </li>
+          <li>
+            <a ng-repeat="item in items" 
+             href="#/{{item.id}}"
+             class="item item-thumbnail-left">
+            <img ng-src="{{ item.image }}">
+            <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+            <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+            </a>
+          </li>
+          <li>
+            <a ng-repeat="item in items" 
+             href="#/{{item.id}}"
+             class="item item-thumbnail-left">
+            <img ng-src="{{ item.image }}">
+            <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+            <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+            </a>
+          </li>
+          <li>
+            <a ng-repeat="item in items" 
+             href="#/{{item.id}}"
+             class="item item-thumbnail-left">
+            <img ng-src="{{ item.image }}">
+            <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
+            <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
+            </a>
+          </li>
+        </ul>
+      </div>
     </ion-content>
+    <div class="bar bar-footer">
+      <button class="button button-full button-positive icon ion-ios7-plus-empty">more</button>
+    </div>
     <!-- /ion-nav-view -->
   </body>
 </html>
