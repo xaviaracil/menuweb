@@ -22,6 +22,6 @@ body {
 
 /* Cambiando ionic */
 
-.bar.bar-positive, .bar-footer .button-positive {
+.bar.bar-positive, /*.bar-footer */.button-positive, .button.button-positive, .button.button-positive.active {
 	background-color: #0067b4;
 }

@@ -45,7 +45,7 @@
     <!-- Map View -->
     <!-- ion-nav-view title="Map finder" -->
       <div class="bar bar-header bar-positive">
-        <button class="button button-clear icon ion-ios7-search-strong"><a href=""></a></button> 
+        <button class="button button-clear icon ion-ios7-search-strong"><a href="#"></a></button> 
         <!-- AHL; Hay que modificar las rutas de los botones en el js, que ahora llevan a las tabs de la template. Éste botón debe de llevarnos a la pantalla de búsqueda -->
         <h1 class="title">Menu-Web</h1>
         <button class="button button-icon icon ion-navicon" ><a href="list.html"></a></button>
@@ -59,6 +59,7 @@
       </ion-content>
       <ion-footer-bar class="bar bar-positive">
       <a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a> <!-- El localizador, tiene que estar sobre el mapa, pero si lo saco del footer y lo pongo en el iframe, no lo veo -->
+      <button class="button button-positive icon ion-camera"> QR Scan</button>
       </ion-footer-bar>
     <!-- /ion-nav-view -->
     <!-- End Map View -->
