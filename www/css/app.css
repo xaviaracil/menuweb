@@ -19,11 +19,31 @@ body {
 .bar.bar-positive, /*.bar-footer */.button-positive, .button.button-positive, .button.button-positive.active {
 	background-color: #0067b4;
 }
-div.row, .card {
+div.row, div.row div.col.card {
 	margin: 0;
 	padding: 0;
 }
 .img-full img {
 	max-width: 100%;
-	/*max-height: 50%;*/
+}
+
+/* Menu pages */
+
+ul.list.menu-view .item-divider {
+	text-align: center;
+}
+ul.list.menu-view .item {
+	position: relative;
+}
+ul.list.menu-view .item, ul.list.menu-view .item p {
+	text-overflow: initial;
+	white-space: normal;
+}
+ul.list.menu-view .item p {
+	max-width: 85%;
+}
+ul.list.menu-view .item span {
+	position: absolute;
+	right: 15px;
+	top: 15px;
 }

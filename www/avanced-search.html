@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title>Restaurant</title>
+    <title>Búsqueda</title>
 
     <!-- ionic css -->
     <link href="lib/css/ionic.css" rel="stylesheet">
@@ -14,6 +14,7 @@
 
     <!-- ionic/angularjs scripts -->
     <script src="lib/js/ionic.bundle.js"></script>
+    <!-- script src="http://code.ionicframework.com/1.0.0-beta.1/js/ionic.bundle.min.js"></script --> <!-- Js comprimido de Ionic en su servidor -->
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -23,40 +24,41 @@
     <script src="js/services.js"></script>
     <script src="js/controllers.js"></script>
 
-    <script src="http://code.ionicframework.com/1.0.0-beta.1/js/ionic.bundle.min.js"></script>
-
   </head>
   <!-- 
     'starter' is the name of this angular module (js/app.js)
   -->
   <body ng-controller="MyCtrl">
-<!-- ion-view title="Restaurant List" --> <!--  Habilitar si empleamos Views -->
     <ion-header-bar class="bar bar-header bar-positive">
     <button class="button button-clear icon ion-ios7-arrow-back"><a href="index.html"></a></button> 
-      <h1 class="title">La Taqueria</h1>
+      <h1 class="title">Búsqueda</h1>
     </ion-header-bar>
     <ion-content class="scroll-content has-header">
-      <div class="row">
-        <div class="col card">
-          <img class="full-image" src="img/muestra_img.jpg">
-          <div class="item">
-            <h2>La Taqueria</h2>
-            <p>Passatge de Font, 5.</p>
-            <p>08018. Barcelona.</p>
-          </div>
-          <div class="button-bar">
-            <button ng-show="map" class="button button-light icon ion-location" open-url="#"> Location</button>
-            <button ng-show="userLocation" class="button button-light icon ion-navigate" open-url="#"> Go!</button>
-            <button  class="button button-light icon ion-ios7-telephone"> Call</button>
-          </div>
-        </div>
+      <div class="padding">
+        <p>Escribe el nombre del restaurante que buscas</p>
       </div>
-      <!-- div class="row padding">
-
-      </div -->
+      <div class="list list-inset"> 
+        <label class="item item-input">
+          <input type="text" placeholder="Nombre">
+          <i class="icon ion-search placeholder-icon"></i>
+        </label>
+      </div>
+      <div class="padding">
+        <p>O busca por:</p>
+      </div>
+      <div class="list card">
+        <a class="item" href="#">Tipo de cocina</a>
+        <a class="item" href="#">Rango de precio</a>
+        <a class="item" href="#">Idioma</a>
+      </div>
+      <div class="padding">
+        <p>¿Quieres sugerirnos un restaurante?</p>
+        <p>¿Tienes un restaurante y te gustaría estar en Menu-Web?</p>
+      </div>
     </ion-content>
+  
     <div class="bar bar-footer">
-      <button class="button button-full button-positive icon ion-spoon"> Ver Menu</button>
+      <button class="button button-full button-positive">Contacta</button>
     </div>
     <!-- /ion-nav-view -->
   </body>
