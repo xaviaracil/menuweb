@@ -3,7 +3,7 @@
   <!-- Center content -->
   <ion-pane ion-side-menu-content>
   <google-map center='map.center' zoom='map.zoom' draggable="true" options='{streetViewControl:false}'>
-    <markers models="map.markers" coords="'self'" click="'onClicked'" icon="'icon'" 
+    <markers models="map.markers" coords="'self'" click="'onClicked'" icon="'icon'"
              doCluster="map.doCluster" clusterOptions="map.clusterOptions">
         <windows show="'showWindow'">
             <div class="list">
@@ -20,18 +20,16 @@
 
   <!-- Right menu -->
   <ion-side-menu side="right">
-  <!-- debug
-    <header class="bar bar-header bar-assertive">
+    <ion-header-bar class="bar bar-header bar-assertive">
         <div class="title">Restaurants</div>
-    </header>
-    <ion-content has-header="true">    
+    </ion-header-bar>
+    <ion-content has-header="true">
         <ion-list>
-            <ion-item ng-repeat="rest in map.markers">
-            {{ rest.title }}
+            <ion-item ng-repeat="rest in restaurants.models">
+            {{ rest.getName() }}
             </ion-item>
         </ion-list>
     </ion-content>
-    -->
   </ion-side-menu>
 </ion-side-menus>
 
@@ -52,7 +50,7 @@
                         </span>
                     </div>
                 </div>
-            </form>    
+            </form>
         </div>
     </div>
 </nav>
