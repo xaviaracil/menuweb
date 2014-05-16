@@ -3,6 +3,12 @@
 body {
   cursor: url('http://ionicframework.com/img/finger.png'), auto;
 }
+
+/* loading page */
+
+img.logo {
+    max-width: 100%;
+}
 /* MAPA */
 
 #map {
