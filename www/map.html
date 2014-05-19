@@ -47,7 +47,7 @@
     <!-- ion-nav-view title="Map finder" -->
       <div class="bar bar-header bar-positive">
         <button class="button button-clear icon ion-ios7-search-strong"><a href="#"></a></button> 
-        <!-- AHL; Hay que modificar las rutas de los botones en el js, que ahora llevan a las tabs de la template. Éste botón debe de llevarnos a la pantalla de búsqueda -->
+        <!-- AHL; Hay que modificar las rutas de los botones en el js, que ahora llevan a las tabs de la template. Éste botón debe de llevarnos a la pantalla de búsqueda avanzada -->
         <h1 class="title">Menu-Web</h1>
         <button class="button button-icon icon ion-navicon" ><a href="list.html"></a></button>
       </div>
@@ -55,13 +55,27 @@
         <div id="map">
           <iframe width="100%" height="95%" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" src="https://www.google.com/maps?t=m&amp;ie=UTF8&amp;ll=41.39479,2.148768&amp;spn=0.123624,0.308647&amp;z=12&amp;output=embed">
           </iframe>
-
+            <div class="infowindow">
+                <div class="flotant fbottom">
+                    <div class="fletxa"></div>
+                    <div class="content">
+                            <a class="item item-avatar" href="restaurant.html">
+                                <img src="img/taqueria.jpg">
+                                <h2>La Taqueria</h2>
+                                <p>Passatge de Font, 5.</p>
+                            </a>
+                    </div>
+                </div>
+            </div>
+            
         </div>
       </ion-content>
-      <ion-footer-bar class="bar bar-positive">
-      <a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a> <!-- El localizador, tiene que estar sobre el mapa, pero si lo saco del footer y lo pongo en el iframe, no lo veo -->
-      <button class="button button-positive icon ion-camera"> QR Scan</button>
-      </ion-footer-bar>
+      <!-- ion-footer-bar class="bar bar-positive" -->
+      <!-- a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a --> <!-- El localizador, tiene que estar sobre el mapa, pero si lo saco del footer y lo pongo en el iframe, no lo veo --> <!-- AHL Eliminado botón de localizar a usuario -->
+	  	<div class="bar bar-footer bar-positive">
+      		<button class="button button-full button-positive icon ion-camera"> QR Scan</button>
+    	</div>
+    <!-- /ion-footer-bar -->
     <!-- /ion-nav-view -->
     <!-- End Map View -->
   </body>

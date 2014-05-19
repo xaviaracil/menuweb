@@ -19,20 +19,75 @@ img.logo {
 .scroll {
   height: 100%;
 }
+/* Vista info restaurant */
+
+.infowindow {
+	/* borrar las siguientes CSS, modificar posición mediante Js */
+	position: absolute;
+	top: 150px;
+	right: 25px;/* Borrar hasta aquí */
+}
+.infowindow .flotant {
+	position: relative;
+}
+.flotant .content {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: #FFF;
+	font-size: 0.5em;
+	line-height: 1.5em;
+	/*border: 1px solid #0067b4;
+	box-shadow: 1px 1px 1px #0067b4;
+	-webkit-box-shadow: 1px 1px 1px #0067b4;
+	-moz-box-shadow: 1px 1px 1px #0067b4;*/
+}
+.flotant .fletxa {
+  position: absolute;
+  width: 25px;
+  height: 13px;
+  background: url(../img/flotant-fletxa.svg) no-repeat top left;
+  top: -1px;
+  left: 15px;
+}
+.infowindow .fbottom {
+  padding-top: 0;
+  padding-bottom: 16px;
+}
+.infowindow .fbottom .fletxa {
+  bottom: 0;
+  background-position: bottom;
+  height: 18px;
+  right: 10px;
+  top: auto;
+}
+.infowindow .item p {
+	overflow: visible;
+}
 
 /* Cambiando ionic */
 
-.bar.bar-positive, /*.bar-footer */.button-positive, .button.button-positive, .button.button-positive.active {
+.bar.bar-positive, .bar-footer .button-positive, .button.button-positive, .button.button-positive.active {
 	background-color: #0067b4;
 }
 div.row, div.row div.col.card {
 	margin: 0;
 	padding: 0;
 }
+.option p {
+    padding: 10px 10px 0;
+}
 .img-full img {
 	max-width: 100%;
 }
 
+/* Advanced Search page */
+.list-inset {
+    margin: 10px;
+}
+.item-input {
+    padding: 6px 15px 5px 8px;
+}
 /* Menu pages */
 
 ul.list.menu-view .item-divider {
@@ -52,4 +107,8 @@ ul.list.menu-view .item span {
 	position: absolute;
 	right: 15px;
 	top: 15px;
+}
+.bar-footer .button.button-full {
+	margin: 0;
+	font-size: 15px;
 }

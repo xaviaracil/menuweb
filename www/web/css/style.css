@@ -1,0 +1,259 @@
+/* 
+ 	menu-web.com / cottonfields.es	
+	#0 INDEX 
+	#1 BASE
+	  #1.1 Reset
+	  #1.2 Presets   
+	#2 LAYOUT
+	  #2.1 Header
+      #2.2 Container
+	  #2.3 Footer
+	#3 CONTENT
+	  #3.1 Intro
+	#5 MEDIA QUERIES
+
+*/
+
+/* #1 BASE */
+
+/* #1.1 Reset */
+
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,code,del,dfn,em,img,q,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;margin:0;padding:0;}
+table{border-collapse:separate;border-spacing:0;margin-bottom:1.4em;}
+caption,th,td{text-align:left;font-weight:400;}
+blockquote:before,blockquote:after,q:before,q:after{content:"";}
+blockquote,q{quotes:;}
+a img{border:none;}
+ul{list-style-position: inside;list-style-type: none;	}
+
+/* Micro Clearfix - http://nicolasgallagher.com/micro-clearfix-hack/ */
+.cf:before, .cf:after { content:""; display:table; }
+.cf:after { clear:both; }
+.cf { zoom:1; } /* For IE 6/7 (trigger hasLayout) */
+
+/* apply a natural box layout model to all elements 
+(if supporting <IE8, use a pollyfill: https://github.com/Schepp/box-sizing-polyfill ) */
+* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+/* #1.2 Presets */
+
+body{
+	/* padding: 10px 3em 0; */
+	color: #222222;
+	font: 1em/1.8 'PT Serif', serif;
+}
+.img-cont img{
+	max-width: 100%;
+}
+/*body > header, body > section, body > .wrapper > section, body > .wrapper > footer{
+	max-width: 1000px;	
+	margin: 0 auto;
+}*/
+
+.wrapper{
+	padding: 0 3em 2em;
+	color: #ccc;
+    border-top: 1px solid #ccc;
+}
+
+a{
+	color: #0067b4;
+	text-decoration: none;
+}
+.cols li, footer {
+    font-family: "omnes-pro",sans-serif;
+}
+/* #2 LAYOUT */
+
+/* #2.1 Header */ 
+header {
+    width: 100%;
+    background-color: transparent;
+    padding: 1em;
+    border-bottom: 3px solid #0067b4;
+}
+
+.logo {
+    display: block;
+    width: 35%;
+    height: 35%;
+}
+/* #2.2 Container */ 
+.container {
+    background: url(../img/map.svg) no-repeat 0 5px;
+    background-size: 100%;
+    overflow: hidden;
+}
+section.content {
+    padding: 4em 2em;
+    float: right;
+    width: 75%;
+    background-color: rgba(255, 255, 255, 0.75)
+}
+section h2 {
+    font-family: "rooney-sans",sans-serif;
+    color: #0067b4;
+    font-size: 2.5em;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 0.8em;
+  }
+section h2 span {
+    font-size: 0.6em;
+    font-weight: normal;
+}
+section article p {
+    font-family: "omnes-pro",sans-serif;
+    font-style: normal;
+    font-size: 1.5em;
+    font-weight: 200;
+}
+section article p:last-child {
+    overflow: hidden;
+}
+span.call {
+    float: right;
+}
+section article:last-child {
+    border-top: 2px solid rgba(0, 103, 180, 0.50);
+    padding-top: 1em;
+}
+article.action ul {
+	overflow: hidden;
+	width: 100%;
+	}
+article.action li {
+    float: left;
+    margin-right: 10px;
+}
+
+ul.cols {
+    /*padding: 0 3em 2em;*/
+    margin: 0 auto;
+    overflow: hidden;
+    padding-top: 25px;
+    max-width: 1000px;
+}
+.cols li {
+    display: inline-block;
+    float: left;
+    width: 33.3%;
+    text-align: center;
+    
+}
+.cols li img {
+    height: 65px;
+}
+
+
+/* #2.3 Footer */
+
+footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.8em;
+}
+
+/*	#5 MEDIA QUERIES  */
+
+/* Smartphones (vertical y horizontal) ----------- */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+    .logo {
+    width: 85%;
+    height: 85%;
+    margin: 0 auto;
+}
+    section.content {
+    padding: 2em;
+    float: none;
+    width: 100%;
+    }
+    section h2 {
+        display: none;
+        /*font-size: 1.5em;*/
+    }
+    section h2 span {
+        /* font-size: 0.5em;*/
+        display: none;
+    }
+    section article p {
+        font-size: 1.2em;
+    }
+    article.action li {
+        float: left;
+		width: 45%;
+    }
+	article.action li:last-child {
+		float: right;
+	}
+    article.action li img {
+        width: 90%;
+    }
+}
+
+/* Smartphones (horizontal) ----------- */
+@media only screen
+and (min-width : 321px) {
+}
+
+/* Smartphones (vertical) ----------- */
+@media only screen
+and (max-width : 320px) {
+}
+
+/* iPad2 (vertical y horizontal) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px) {
+}
+
+/* iPad2 (horizontal) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : landscape) {
+}
+
+/* iPad2 (vertical) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait) {
+}
+
+/* Ipad3 (horizontal) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : landscape)
+and (-webkit-min-device-pixel-ratio : 2) {
+}
+
+/* Ipad3 (vertical) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait)
+and (-webkit-min-device-pixel-ratio : 2) {
+}
+
+/* Grandes resoluciones ----------- */
+@media only screen
+and (min-width : 1824px) {
+}
+
+/* iPhone 4 ----------- */
+@media
+only screen and (-webkit-min-device-pixel-ratio : 1.5),
+only screen and (min-device-pixel-ratio : 1.5) {
+}
+
+/* iPhone 5 ----------- */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px)
+and (orientation : landscape)
+and (-webkit-min-device-pixel-ratio : 2) {
+}

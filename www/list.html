@@ -29,12 +29,12 @@
   <!-- 
     'starter' is the name of this angular module (js/app.js)
   -->
-  <body ng-controller="MyCtrl">
+  <body ng-controller="MyCtrl" scroll="true">
 <!-- ion-view title="Restaurant List" --> <!--  Habilitar si empleamos Views -->
     <ion-header-bar class="bar bar-header bar-positive">
     <button class="button button-clear icon ion-ios7-arrow-back"><a href="index.html"></a></button> 
       <h1 class="title">List</h1>
-      <button class="button button-clear" ><a href="index.html"></a>Map</button>
+      <button class="button button-clear icon ion-location" ><a href="index.html"></a></button>
     </ion-header-bar>
     <ion-content class="scroll-content has-header">
       <div class="scroll"> 
@@ -42,7 +42,7 @@
           <li>
             <a ng-repeat="item in items" 
              href="#/{{item.id}}"
-             class="item item-thumbnail-left">
+             class="item item-avatar">
             <img src="img/taqueria.jpg">
             <h2>La Taqueria</h2> <!-- {{ item.restaurant }} (restaurant, no está definida) -->
             <h4>2,5 Km.</h4> <!-- {{ item.distance }} (distance, no está definida) -->
@@ -51,8 +51,8 @@
           <li>
             <a ng-repeat="item in items" 
              href="#/{{item.id}}"
-             class="item item-thumbnail-left">
-            <img src="img/no_img.jpg">
+             class="item item-avatar">
+            <img src="img/icon.png">
             <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
             <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
             </a>
@@ -60,8 +60,8 @@
           <li>
             <a ng-repeat="item in items" 
              href="#/{{item.id}}"
-             class="item item-thumbnail-left">
-            <img src="img/no_img.jpg">
+             class="item item-avatar">
+            <img src="img/icon.png">
             <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
             <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
             </a>
@@ -69,8 +69,8 @@
           <li>
             <a ng-repeat="item in items" 
              href="#/{{item.id}}"
-             class="item item-thumbnail-left">
-            <img ng-src="{{ item.image }}">
+             class="item item-avatar">
+            <img src="img/icon.png">
             <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
             <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
             </a>
@@ -78,8 +78,8 @@
           <li>
             <a ng-repeat="item in items" 
              href="#/{{item.id}}"
-             class="item item-thumbnail-left">
-            <img ng-src="{{ item.image }}">
+             class="item item-avatar">
+            <img src="img/icon.png">
             <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
             <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
             </a>
@@ -87,7 +87,7 @@
           <li>
             <a ng-repeat="item in items" 
              href="#/{{item.id}}"
-             class="item item-thumbnail-left">
+             class="item item-avatar">
             <img ng-src="{{ item.image }}">
             <h2>{{ item.restaurant }}</h2> <!-- (restaurant, no está definida) -->
             <h4>{{ item.distance }}</h4> <!-- (distance, no está definida) -->
@@ -96,7 +96,7 @@
         </ul>
       </div>
     </ion-content>
-    <div class="bar bar-footer">
+    <div class="bar bar-footer bar-positive">
       <button class="button button-full button-positive icon ion-plus-round"> more</button>
     </div>
     <!-- /ion-nav-view -->
