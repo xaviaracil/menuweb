@@ -16,21 +16,19 @@ img.logo {
   height: 100%;
 }
 
+.angular-google-map {
+  display: block;
+}
 /* google maps */
 .angular-google-map-container {
-  height: 480px; 
+  height: 480px;
 }
 
 .scroll {
   height: 100%;
 }
 /* Vista info restaurant */
-
 .infowindow {
-	/* borrar las siguientes CSS, modificar posición mediante Js */
-	position: absolute;
-	top: 150px;
-	right: 25px;/* Borrar hasta aquí */
 }
 .infowindow .flotant {
 	position: relative;

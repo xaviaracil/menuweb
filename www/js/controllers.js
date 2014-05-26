@@ -42,7 +42,7 @@ angular.module('menuweb.controllers', [])
         };
 
         // Show the loading overlay and text
-        //$scope.loading = $ionicLoading.show(loadingOptions);
+        $scope.loading = $ionicLoading.show(loadingOptions);
 
         // get the collection from our data definitions
         var restaurants = new RestaurantService.collection();
@@ -70,7 +70,7 @@ angular.module('menuweb.controllers', [])
                 ignoreHidden: true,
                 minimumClusterSize: 2,
                 imageExtension: 'png',
-                imagePath: 'img/pin',
+                imagePath: 'img/icon',
                 imageSizes: [72]
             }
         };
@@ -119,10 +119,15 @@ angular.module('menuweb.controllers', [])
                 return {
                     latitude: rest.getLocation() ? rest.getLocation().latitude : 0.0,
                     longitude: rest.getLocation() ? rest.getLocation().longitude: 0.0,
-                    title: rest.getName(),
-                    translationNumber: rest.getTranslationNumber(),
-                    icon: "img/pin.png",
-                    logoUrl: "img/pin.png" // TODO change
+                    id: rest.id,
+                    templateUrl: 'templates/info-window.html',
+                    templateParameter: {
+                      id: rest.id,
+                      title: rest.getName(),
+                      address: rest.getAddress(),
+                      logoUrl: rest.getLogoUrl()
+                    },
+                    icon: "img/icon.png"
                 };
             });
             $scope.loading.hide();

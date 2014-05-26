@@ -2,17 +2,12 @@
   <ion-side-menus>
     <!-- Center content -->
     <ion-pane ion-side-menu-content>
-      <google-map center='map.center' zoom='map.zoom' draggable="true" options='{streetViewControl:false}'>
+      <google-map center='map.center' zoom='map.zoom' draggable="true" options='{streetViewControl:false}' pan="true" ngCloak>
         <markers models="map.markers" coords="'self'" click="'onClicked'" icon="'icon'"
         doCluster="map.doCluster" clusterOptions="map.clusterOptions">
-          <windows show="'showWindow'">
-            <div class="list">
-              <a class="item item-avatar" href="#" ng-non-bindable>
-                <img src="{{ logoUrl }}">
-                <h2>{{ title }}</h2>
-                <p ng-non-bindable>Languages: <span class="badge" id="tanslations_{{id}}">{{ translationNumber }}</span></p>
-              </a>
-            </div>
+          <windows show="'showWindow'" coords="'self'" templateParameter="'templateParameter'" templateUrl="'templateUrl'" options="{boxClass:'infowindow', pixelOffset: {height: -100, width: 0}, closeBoxURL:''}" ngCloak>
+            <!--
+          -->
           </windows>
         </markers>
       </google-map>

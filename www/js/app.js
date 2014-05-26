@@ -25,6 +25,11 @@ angular.module('menuweb', ['ionic',
         url: "/restaurants",
         templateUrl: 'templates/restaurant-list.html',
         controller: 'RestaurantListCtrl'
+      })
+    .state('restaurant', {
+        url: "/restaurants/:restaurantId",
+        templateUrl: 'templates/restaurant.html',
+        controller: 'RestaurantCtrl'
       });
 
   // if none of the above states are matched, use this as the fallback
