@@ -11,10 +11,13 @@ img.logo {
 }
 /* MAPA */
 
-#map {
+#map, .angular-google-map-container {
   width: 100%;
   height: 100%;
 }
+
+/* google maps */
+/*.angular-google-map-container { height: 480px; }*/
 
 .scroll {
   height: 100%;

@@ -12,42 +12,64 @@
     <!-- your app's css -->
     <link href="css/app.css" rel="stylesheet">
 
+    <!-- google maps javascript -->
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAKIhcVJSlb5vEiXYQxhDnPbS6rnRmPJVY&sensor=true"></script>
+
+    <!-- underscore js -->
+    <script src="lib/js/underscore/underscore-min.js"></script>
+    <!-- angular js -->
+    <script src="lib/js/angular/angular.min.js"></script>
+    <script src="lib/js/angular/angular-sanitize.min.js"></script>
+    <script src="lib/js/angular/angular-animate.min.js"></script>
+    <script src="lib/js/angular-google-maps/angular-google-maps.min.js"></script>
+    <script src="lib/js/angular-ui/angular-ui-router.min.js"></script>
+
     <!-- ionic/angularjs scripts -->
     <script src="lib/js/ionic.bundle.js"></script>
+    <script src="lib/js/ionic-angular.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+    <!-- parse javascript -->
+    <script src="http://www.parsecdn.com/js/parse-1.2.15.js"></script>
+
+    <!-- Parse angular specific -->
+    <script src="js/services/ParseServices.js"></script>
+    <script src="js/services/ParseQueryAngular.js"></script>
+    <script src="js/modules/data/_ParseObjects.js"></script>
 
     <!-- your app's script -->
     <script src="js/app.js"></script>
-    <script src="js/services.js"></script>
     <script src="js/controllers.js"></script>
-    <!-- google maps javascript -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es&sensor=true"></script>
+    <script src="js/modules/data/Restaurants.js"></script>
 
   </head>
 
-  <!-- 
-    'starter' is the name of this angular module (js/app.js)
-  -->
-  <body ng-app="starter" animation="slide-left-right-ios7">
+  <body animation="slide-left-right-ios7">
 
-    <!-- 
+    <!--
       The nav bar that will be updated as we navigate between views
       Additional attributes set its look, ion-nav-bar animation and icons
-      Icons provided by Ionicons: http://ionicons.com/ 
+      Icons provided by Ionicons: http://ionicons.com/
     -->
+    <ion-nav-bar type="bar-positive"
+             animation="nav-title-slide-ios7"
+             back-button-type="button-icon button-clear"
+             back-button-icon="ion-ios7-arrow-back"></ion-nav-bar>
 
-    <!-- 
+    <!--
       The views will be rendered in the <ion-nav-view> directive below
       Templates are in the /templates folder (but you could also
       have templates inline in this html file if you'd like).
     -->
+    <ion-nav-view></ion-nav-view>
+
     <!-- Map View -->
     <!-- ion-nav-view title="Map finder" -->
+    <!--
       <div class="bar bar-header bar-positive">
-        <button class="button button-clear icon ion-ios7-search-strong"><a href="#"></a></button> 
-        <!-- AHL; Hay que modificar las rutas de los botones en el js, que ahora llevan a las tabs de la template. Éste botón debe de llevarnos a la pantalla de búsqueda avanzada -->
+        <button class="button button-clear icon ion-ios7-search-strong"><a href="#"></a></button>
+        < !-- AHL; Hay que modificar las rutas de los botones en el js, que ahora llevan a las tabs de la template. Éste botón debe de llevarnos a la pantalla de búsqueda avanzada - ->
         <h1 class="title">Menu-Web</h1>
         <button class="button button-icon icon ion-navicon" ><a href="list.html"></a></button>
       </div>
@@ -67,16 +89,26 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
       </ion-content>
-      <!-- ion-footer-bar class="bar bar-positive" -->
-      <!-- a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a --> <!-- El localizador, tiene que estar sobre el mapa, pero si lo saco del footer y lo pongo en el iframe, no lo veo --> <!-- AHL Eliminado botón de localizar a usuario -->
+      <!-- ion-footer-bar class="bar bar-positive" - ->
+      <!-- a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a --> <!-- El localizador, tiene que estar sobre el mapa, pero si lo saco del footer y lo pongo en el iframe, no lo veo --> <!-- AHL Eliminado botón de localizar a usuario - ->
 	  	<div class="bar bar-footer bar-positive">
       		<button class="button button-full button-positive icon ion-camera"> QR Scan</button>
     	</div>
     <!-- /ion-footer-bar -->
     <!-- /ion-nav-view -->
     <!-- End Map View -->
+    -->
+
+
+    <script type="text/javascript">
+      // manual bootstrap
+      angular.element(document).ready(function() {
+        angular.bootstrap(document, ['menuweb']);
+      });
+
+    </script>
   </body>
 </html>
