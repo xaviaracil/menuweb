@@ -1,0 +1,31 @@
+<ion-view title="Menu-Web">
+  <ion-nav-buttons side="left">
+    <button class="button button-clear" ui-sref="search">
+      <i class="icon ion-ios7-search-strong"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-icon" ui-sref="restaurants">
+      <i class="icon ion-navicon"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <google-map center='map.center' zoom='map.zoom' draggable="true" options='{streetViewControl:false}' pan="true" ngCloak>
+      <markers models="map.markers" coords="'self'" click="'onClicked'" icon="'icon'"
+      doCluster="map.doCluster" clusterOptions="map.clusterOptions">
+        <windows show="'showWindow'" coords="'self'" templateParameter="'templateParameter'" templateUrl="'templateUrl'" options="{boxClass:'infowindow', pixelOffset: {height: -100, width: 0}, closeBoxURL:''}" ngCloak>
+          <!--
+        -->
+        </windows>
+      </markers>
+    </google-map>
+    <ion-footer-bar class="bar-positive">
+      <div class="bar bar-footer bar-positive">
+          <button class="button button-full button-positive icon ion-camera"> QR Scan</button>
+      </div>
+    </ion-footer-bar>
+
+  </ion-content>
+</ion-view>

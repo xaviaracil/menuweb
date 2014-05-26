@@ -21,10 +21,23 @@ angular.module('menuweb', ['ionic',
   // Each state's controller can be found in controllers.js
   $stateProvider
 
+    .state('map', {
+        url: "/",
+        views: {
+          'home': {
+            templateUrl: 'templates/restaurant-map.html',
+            controller: 'RestaurantMapCtrl'
+          }
+        }
+      })
     .state('restaurants', {
         url: "/restaurants",
-        templateUrl: 'templates/restaurant-list.html',
-        controller: 'RestaurantListCtrl'
+        views: {
+          'home': {
+            templateUrl: 'templates/restaurant-list.html',
+            controller: 'RestaurantListCtrl'
+          }
+        }
       })
     .state('restaurant', {
         url: "/restaurants/:restaurantId",
@@ -33,7 +46,7 @@ angular.module('menuweb', ['ionic',
       });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/restaurants');
+  $urlRouterProvider.otherwise('/');
 })
 
 .run(['ParseSDK', 'ExtendParseSDK', '$rootScope', function(ParseService, ExtendParseSDK, $rootScope) {

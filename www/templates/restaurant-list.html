@@ -1,64 +1,19 @@
-<ion-view title="'Menu-Web'" left-buttons="leftButtons" right-buttons="rightButtons">
-  <ion-side-menus>
-    <!-- Center content -->
-    <ion-pane ion-side-menu-content>
-      <google-map center='map.center' zoom='map.zoom' draggable="true" options='{streetViewControl:false}' pan="true" ngCloak>
-        <markers models="map.markers" coords="'self'" click="'onClicked'" icon="'icon'"
-        doCluster="map.doCluster" clusterOptions="map.clusterOptions">
-          <windows show="'showWindow'" coords="'self'" templateParameter="'templateParameter'" templateUrl="'templateUrl'" options="{boxClass:'infowindow', pixelOffset: {height: -100, width: 0}, closeBoxURL:''}" ngCloak>
-            <!--
-          -->
-          </windows>
-        </markers>
-      </google-map>
-      <ion-footer-bar class="bar-positive">
-        <div class="bar bar-footer bar-positive">
-            <button class="button button-full button-positive icon ion-camera"> QR Scan</button>
-        </div>
-      </ion-footer-bar>
+<ion-view title="List" right-buttons="rightButtons">
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ui-sref="map">
+      <i class="icon ion-location"></i>
+    </button>
+  </ion-nav-buttons>
 
-    </ion-pane>
-
-    <!-- Right menu -->
-    <ion-side-menu side="right">
-      <ion-header-bar class="bar bar-header bar-assertive">
-        <div class="title">Restaurants</div>
-      </ion-header-bar>
-      <ion-content has-header="true">
-        <ion-list>
-          <ion-item ng-repeat="rest in restaurants.models">
-          {{ rest.getName() }}
-          </ion-item>
-        </ion-list>
-      </ion-content>
-    </ion-side-menu>
-  </ion-side-menus>
-
-<!--
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-<div class="container-fluid">
-<div class="row">
-<form class="navbar-form navbar-right" role="search" ng-click>
-<div class="col-xs pull-right">
-<button class="btn btn-default" ng-show="query" ng-click="resetQuery()" type="button"><span class="glyphicon glyphicon-remove-circle"></span></button>
-</div>
-<div class="col-xs-6 pull-right">
-<div class="input-group">
-<input type="search" class="form-control" placeholder="Find a restaurant" ng-model="query">
-<span class="input-group-btn">
-<button class="btn btn-default" ng-click="find(query)" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-</span>
-</div>
-</div>
-</form>
-</div>
-</div>
-</nav>
--->
-
+  <ion-content has-header="true">
+    <ion-list>
+      <ion-item ng-repeat="rest in restaurants">
+        <a class="item item-avatar" ui-sref="restaurant({restaurantId: rest.id })">
+          <img src="{{ rest.getLogoUrl() }}">
+          <h2>{{ rest.getName() }}</h2>
+          <h4>TODO!!</h4>
+        </a>
+      </ion-item>
+    </ion-list>
+  </ion-content>
 </ion-view>
-<!--
-<div class="footer">
-<p>&copy; Menu-web: Restaurants in your language</p>
-</div>
--->
