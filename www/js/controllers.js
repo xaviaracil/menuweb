@@ -42,7 +42,7 @@ angular.module('menuweb.controllers', [])
         };
 
         // Show the loading overlay and text
-        $scope.loading = $ionicLoading.show(loadingOptions);
+        //$scope.loading = $ionicLoading.show(loadingOptions);
 
         // get the collection from our data definitions
         var restaurants = new RestaurantService.collection();
