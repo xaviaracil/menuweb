@@ -1,7 +1,7 @@
 angular.module('menuweb.controllers', [])
 
-.controller('RestaurantMapCtrl', ['$scope', '$state', '$ionicLoading', 'RestaurantService',
-function($scope, $state, $ionicLoading, RestaurantService) {
+.controller('RestaurantMapCtrl', ['$scope', '$rootScope', '$state', '$ionicLoading', 'RestaurantService',
+function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
   var loadingOptions = {
     // The text to display in the loading indicator
     content: 'Loading',
@@ -56,6 +56,7 @@ function($scope, $state, $ionicLoading, RestaurantService) {
   // HTML5 geolocation
   if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
+      $rootScope.currentPosition = position;
       $scope.map.center = position.coords;
       $scope.map.zoom = 15;
 
@@ -99,15 +100,33 @@ function($scope, $state, $ionicLoading, RestaurantService) {
 }
 ])
 
-.controller('RestaurantListCtrl', ['$scope', '$ionicNavBarDelegate', 'RestaurantService',
-  function($scope, $ionicNavBarDelegate, RestaurantService) {
-    // get the collection from our data definitions
+.controller('RestaurantListCtrl', ['$scope', '$rootScope', '$ionicNavBarDelegate', 'RestaurantService',
+  function($scope, $rootScope, $ionicNavBarDelegate, RestaurantService) {
     var restaurants = new RestaurantService.collection();
 
-    // use the extended Parse SDK to load the whole collection
-    restaurants.load().then(function(foundRestaurants) {
-      $scope.restaurants = foundRestaurants.models;
-    });
+    $scope.refreshRestaurants = function(position) {
+      $rootScope.currentPosition = position.coords;
+      var currentGeoPoint = new Parse.GeoPoint(position.coords);
+      restaurants.loadRestaurantsWithinGeoBox($rootScope.currentPosition).then(function(foundRestaurants) {
+        $scope.restaurants = _.map(foundRestaurants.models, function(restaurant) {
+          return {
+            id: restaurant.id,
+            name: restaurant.getName(),
+            logoUrl: restaurant.getLogoUrl(),
+            distance: currentGeoPoint.kilometersTo(restaurant.getLocation())
+          };
+        });
+      });
+    };
+
+    if ($rootScope.currentPosition) {
+      $scope.refreshRestaurants($rootScope.currentPosition);
+    } else if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition($scope.refreshRestaurants);
+    } else {
+      // TODO: error message? Alphabetical list?
+    }
+
 }])
 
 .controller('SearchCtrl', ['$scope',
