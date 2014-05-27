@@ -1,17 +1,14 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'menuweb' is the name of this angular module example (also set in a <body> attribute in index.html)
+// 'menuweb' is the name of this angular module (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-// 'menuweb.services' is found in services.js
 // 'menuweb.controllers' is found in controllers.js
+// 'menuweb.filters' is found in filters.js
 angular.module('menuweb', ['ionic',
   'menuweb.controllers',
+  'menuweb.filters',
   'ParseServices',
   'ExternalDataServices',
   'google-maps'
 ])
-
 
 .config(function($stateProvider, $urlRouterProvider) {
 

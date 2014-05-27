@@ -90,8 +90,8 @@ angular.module('ExternalDataServices')
 		},
 		loadRestaurantsWithinGeoBox: function(point) {
 			this.query = (new Parse.Query(Restaurant));
-			// TODO: geopoint query
-			this.query.withinKilometers('location', point, 10);
+			// geopoint query, 5 km distance
+			this.query.withinKilometers('location', point, 5);
 			// use the enhanced load() function to fetch the collection
 			return this.load();
 		}

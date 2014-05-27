@@ -10,9 +10,9 @@
       <a ng-repeat="rest in restaurants"
                 class="item item-avatar"
                 ui-sref="restaurant({restaurantId: rest.id})">
-        <img ng-src="{{rest.getLogoUrl()}}">
-        <h2>{{ rest.getName() }}</h2>
-        <h4>TODO!!</h4>
+        <img ng-src="{{ rest.logoUrl }}">
+        <h2>{{ rest.name }}</h2>
+        <h4>{{ rest.distance | number:3 | distance }}</h4>
       </a>
     </ion-list>
   </ion-content>
