@@ -22,28 +22,37 @@ angular.module('menuweb', ['ionic',
   $stateProvider
 
     .state('map', {
-        url: "/",
-        views: {
-          'home': {
-            templateUrl: 'templates/restaurant-map.html',
-            controller: 'RestaurantMapCtrl'
-          }
+      url: "/",
+      views: {
+        'home': {
+          templateUrl: 'templates/restaurant-map.html',
+          controller: 'RestaurantMapCtrl'
         }
-      })
+      }
+    })
     .state('restaurants', {
-        url: "/restaurants",
-        views: {
-          'home': {
-            templateUrl: 'templates/restaurant-list.html',
-            controller: 'RestaurantListCtrl'
-          }
+      url: "/restaurants",
+      views: {
+        'home': {
+          templateUrl: 'templates/restaurant-list.html',
+          controller: 'RestaurantListCtrl'
         }
-      })
+      }
+    })
     .state('restaurant', {
-        url: "/restaurants/:restaurantId",
-        templateUrl: 'templates/restaurant.html',
-        controller: 'RestaurantCtrl'
-      });
+      url: "/restaurants/:restaurantId",
+      templateUrl: 'templates/restaurant.html',
+      controller: 'RestaurantCtrl'
+    })
+    .state('search', {
+      url: "/search",
+      views: {
+        'home': {
+          templateUrl: 'templates/advanced-search.html',
+          controller: 'SearchCtrl'
+        }
+      }
+    });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/');

@@ -108,4 +108,8 @@ function($scope, $state, $ionicLoading, RestaurantService) {
     restaurants.load().then(function(foundRestaurants) {
       $scope.restaurants = foundRestaurants.models;
     });
+}])
+
+.controller('SearchCtrl', ['$scope',
+  function($scope) {
 }]);
