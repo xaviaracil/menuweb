@@ -7,13 +7,13 @@
 
   <ion-content has-header="true">
     <ion-list>
-      <ion-item ng-repeat="rest in restaurants">
-        <a class="item item-avatar" ui-sref="restaurant({restaurantId: rest.id })">
-          <img src="{{ rest.getLogoUrl() }}">
-          <h2>{{ rest.getName() }}</h2>
-          <h4>TODO!!</h4>
-        </a>
-      </ion-item>
+      <a ng-repeat="rest in restaurants"
+                class="item item-avatar"
+                ui-sref="restaurant({restaurantId: rest.id})">
+        <img ng-src="{{rest.getLogoUrl()}}">
+        <h2>{{ rest.getName() }}</h2>
+        <h4>TODO!!</h4>
+      </a>
     </ion-list>
   </ion-content>
 </ion-view>
