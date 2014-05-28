@@ -11,7 +11,7 @@
     </button>
   </ion-nav-buttons>
 
-  <ion-content>
+  <ion-content scroll="false">
     <google-map center='map.center' zoom='map.zoom' draggable="true" options='{streetViewControl:false}' pan="true" ngCloak>
       <markers models="map.markers" coords="'self'" click="'onClicked'" icon="'icon'"
       doCluster="map.doCluster" clusterOptions="map.clusterOptions">

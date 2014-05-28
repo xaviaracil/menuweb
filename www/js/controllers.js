@@ -107,6 +107,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     $scope.refreshRestaurants = function(position) {
       $rootScope.currentPosition = position.coords;
       var currentGeoPoint = new Parse.GeoPoint(position.coords);
+
       restaurants.loadRestaurantsWithinGeoBox($rootScope.currentPosition).then(function(foundRestaurants) {
         $scope.restaurants = _.map(foundRestaurants.models, function(restaurant) {
           return {
@@ -131,4 +132,39 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 
 .controller('SearchCtrl', ['$scope',
   function($scope) {
+}])
+
+.controller('SearchCategoryCtrl', ['$scope', '$state', 'TranslatedCategoriesService',
+  function($scope, $state, TranslatedCategoriesService) {
+    var categories = new TranslatedCategoriesService.collection();
+
+    $scope.loadCategories = function(language) {
+      categories.loadGeneralCategoriesOfLanguage(language).then(function(foundCategories) {
+        $scope.categories = _.map(foundCategories.models, function(category) {
+          return {
+            id: category.get('category').id,
+            name: category.getName(),
+            checked: false
+          };
+        });
+      });
+    };
+
+    // get current language
+    if (navigator.globalization) {
+      navigator.globalization.getPreferredLanguage($scope.loadCategories);
+    } else {
+      var language = navigator.language.split('-')[0];
+      $scope.loadCategories(language);
+    }
+
+    $scope.search = function(selectedCategories) {
+      // get selected categories
+      var selectedCategories = _.filter($scope.categories, function(category) {
+        return category.checked;
+      });
+      console.log(selectedCategories);
+      // TODO search
+      //$state.go('restaurants', {categories: selectedCategories});
+    };
 }]);

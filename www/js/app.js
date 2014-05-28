@@ -49,11 +49,23 @@ angular.module('menuweb', ['ionic',
           controller: 'SearchCtrl'
         }
       }
+    })
+    .state('searchcategory', {
+      url: "/categories",
+      views: {
+        'home': {
+          templateUrl: 'templates/advanced-search-category.html',
+          controller: 'SearchCategoryCtrl'
+        }
+      }
     });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/');
 })
 
-.run(['ParseSDK', 'ExtendParseSDK', '$rootScope', function(ParseService, ExtendParseSDK, $rootScope) {
+.run(['ParseSDK', 'ExtendParseSDK', '$rootScope', '$state', '$stateParams',
+ function(ParseService, ExtendParseSDK, $rootScope, $state, $stateParams) {
+   $rootScope.$state = $state;
+   $rootScope.$stateParams = $stateParams;
 }]);

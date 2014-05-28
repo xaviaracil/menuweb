@@ -1,16 +1,17 @@
+/* global Parse */
 // reference the module we declared earlier
 angular.module('ExternalDataServices')
 
 // add a factory
 .factory('RestaurantService', ['ParseQueryAngular', function(ParseQueryAngular) {
-
+	'use strict';
 	var Restaurant = Parse.Object.extendAngular({
-		className:"Restaurant",
+		className:'Restaurant',
 		setName: function(name) {
 			this.set('name',name);
 			return this;
 		},
-		getName: function(name) {
+		getName: function() {
 			return this.get('name');
 		},
 		getNormalizedName: function() {
@@ -61,6 +62,9 @@ angular.module('ExternalDataServices')
 		},
 		getLogoUrl: function() {
 			return "img/icon.png"; // TODO change
+		},
+		destroyParse:function(){
+			return ParseQueryAngular(this,{functionToCall:'destroy'}); // jshint ignore:line
 		}
 	});
 
@@ -70,19 +74,19 @@ angular.module('ExternalDataServices')
 			return -model.createdAt.getTime();
 		},
 		loadRestaurantsWithName: function(name) {
-			this.query = (new Parse.Query(Restaurant));
+			this.query = new Parse.Query(Restaurant);
 			this.query.contains('normalizedName', name.toLowerCase());
 			// use the enhanced load() function to fetch the collection
 			return this.load();
 		},
-		loadPendingRestaurants: function(name) {
-			this.query = (new Parse.Query(Restaurant));
+		loadPendingRestaurants: function() {
+			this.query = new Parse.Query(Restaurant);
 			this.query.equalTo('translated', false);
 			this.query.descending('name');
 			// use the enhanced load() function to fetch the collection
 			return this.load();
 		},
-		loadRestaurantsOrderedByName: function(name) {
+		loadRestaurantsOrderedByName: function() {
 			this.query = (new Parse.Query(Restaurant));
 			this.query.descending('name');
 			// use the enhanced load() function to fetch the collection
@@ -94,6 +98,26 @@ angular.module('ExternalDataServices')
 			this.query.withinKilometers('location', point, 5);
 			// use the enhanced load() function to fetch the collection
 			return this.load();
+		},
+		addRestaurant: function(name, initialLanguage) {
+			// save request_id to Parse
+			var _this = this;
+
+			var restaurant = new Restaurant();
+			restaurant.setName(name);
+			restaurant.setInitialLanguage(initialLanguage);
+
+			// use the extended Parse SDK to perform a save and return the promised object back into the Angular world
+			return restaurant.saveParse().then(function(data){
+				_this.add(data);
+			});
+		},
+		removeRestaurant:function(restaurant) {
+			if (!this.get(restaurant)) { return false; }
+			var _this = this;
+			return restaurant.destroyParse().then(function(){
+				_this.remove(restaurant);
+			});
 		}
 	});
 
