@@ -28,7 +28,7 @@ angular.module('menuweb', ['ionic',
       }
     })
     .state('restaurants', {
-      url: "/restaurants",
+      url: "/restaurants?categories",
       views: {
         'home': {
           templateUrl: 'templates/restaurant-list.html',

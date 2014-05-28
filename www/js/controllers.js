@@ -100,24 +100,35 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 }
 ])
 
-.controller('RestaurantListCtrl', ['$scope', '$rootScope', '$ionicNavBarDelegate', 'RestaurantService',
-  function($scope, $rootScope, $ionicNavBarDelegate, RestaurantService) {
+.controller('RestaurantListCtrl', ['$scope', '$rootScope', '$stateParams', '$ionicNavBarDelegate', 'RestaurantService', 'CategoriesService',
+  function($scope, $rootScope, $stateParams, $ionicNavBarDelegate, RestaurantService, CategoriesService) {
     var restaurants = new RestaurantService.collection();
+
+    $scope.updateList = function(foundRestaurants) {
+      var currentGeoPoint = new Parse.GeoPoint($rootScope.currentPosition.coords);
+      $scope.restaurants = _.map(foundRestaurants.models, function(restaurant) {
+        return {
+          id: restaurant.id,
+          name: restaurant.getName(),
+          logoUrl: restaurant.getLogoUrl(),
+          distance: currentGeoPoint.kilometersTo(restaurant.getLocation())
+        };
+      });
+    };
 
     $scope.refreshRestaurants = function(position) {
       $rootScope.currentPosition = position.coords;
-      var currentGeoPoint = new Parse.GeoPoint(position.coords);
 
-      restaurants.loadRestaurantsWithinGeoBox($rootScope.currentPosition).then(function(foundRestaurants) {
-        $scope.restaurants = _.map(foundRestaurants.models, function(restaurant) {
-          return {
-            id: restaurant.id,
-            name: restaurant.getName(),
-            logoUrl: restaurant.getLogoUrl(),
-            distance: currentGeoPoint.kilometersTo(restaurant.getLocation())
-          };
+      if ($stateParams.categories) {
+        var categories = _.map($stateParams.categories.split(','), function(id) {
+          var category = new CategoriesService.model();
+          category.id = id;
+          return category;
         });
-      });
+        restaurants.loadRestaurantsWithinGeoBoxAndCategories($rootScope.currentPosition, categories).then($scope.updateList);
+      } else {
+        restaurants.loadRestaurantsWithinGeoBox($rootScope.currentPosition).then($scope.updateList);
+      }
     };
 
     if ($rootScope.currentPosition) {
@@ -160,11 +171,11 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 
     $scope.search = function(selectedCategories) {
       // get selected categories
-      var selectedCategories = _.filter($scope.categories, function(category) {
+      var selectedCategories = _.pluck(_.filter($scope.categories, function(category) {
         return category.checked;
-      });
+      }), 'id');
       console.log(selectedCategories);
       // TODO search
-      //$state.go('restaurants', {categories: selectedCategories});
+      $state.go('restaurants', {categories: selectedCategories});
     };
 }]);

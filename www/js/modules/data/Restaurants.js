@@ -99,6 +99,39 @@ angular.module('ExternalDataServices')
 			// use the enhanced load() function to fetch the collection
 			return this.load();
 		},
+		loadRestaurantsWithinGeoBoxAndCategories: function(point, categories) {
+			console.log('loadRestaurantsWithinGeoBoxAndCategories');
+			if (!categories || !_.size(categories)) {
+				return this.loadRestaurantsWithinGeoBox(point);
+			}
+
+			console.log(_.isArray(categories));
+			if (_.isArray(categories)) {
+				var categoriesQueries = _.map(categories, function(category) {
+					var query = new Parse.Query(Restaurant);
+					query.withinKilometers('location', point, 5); // geopoint query, 5 km distance
+					query.equalTo('generalCategories', category);
+					return query;
+					//return !memo ? query : Parse.Query.or(memo, query);
+				});
+				console.log(categoriesQueries);
+				console.log(_.size(categoriesQueries));
+				if (_.size(categoriesQueries) === 1) {
+					this.query = _.first(categoriesQueries);
+				} else {
+					this.query = Parse.Query.or.apply(null, categoriesQueries);
+				}
+				console.log(this.query);
+			} else {
+				this.query = (new Parse.Query(Restaurant));
+				this.query.equalTo('generalCategories', categories);
+				// geopoint query, 5 km distance
+				this.query.withinKilometers('location', point, 5);
+			}
+
+			// use the enhanced load() function to fetch the collection
+			return this.load();
+		},
 		addRestaurant: function(name, initialLanguage) {
 			// save request_id to Parse
 			var _this = this;
