@@ -1,15 +1,181 @@
-angular.module('starter.controllers', [])
+angular.module('menuweb.controllers', [])
 
+.controller('RestaurantMapCtrl', ['$scope', '$rootScope', '$state', '$ionicLoading', 'RestaurantService',
+function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
+  var loadingOptions = {
+    // The text to display in the loading indicator
+    content: 'Loading',
 
-// A simple controller that fetches a list of data from a service
-.controller('PetIndexCtrl', function($scope, PetService) {
-  // "Pets" is a service returning mock data (services.js)
-  $scope.pets = PetService.all();
-})
+    // The animation to use
+    animation: 'fade-in',
 
+    // Will a dark overlay or backdrop cover the entire view
+    showBackdrop: true,
 
-// A simple controller that shows a tapped item's data
-.controller('PetDetailCtrl', function($scope, $stateParams, PetService) {
-  // "Pets" is a service returning mock data (services.js)
-  $scope.pet = PetService.get($stateParams.petId);
-});
+    // The maximum width of the loading indicator
+    // Text will be wrapped if longer than maxWidth
+    maxWidth: 200,
+
+    // The delay in showing the indicator
+    showDelay: 500
+  };
+
+  // Show the loading overlay and text
+  $scope.loading = $ionicLoading.show(loadingOptions);
+
+  // get the collection from our data definitions
+  var restaurants = new RestaurantService.collection();
+  var initialMarkers = [];
+
+  // use the extended Parse SDK to load the whole collection
+  restaurants.load().then(function(foundRestaurants) {
+    $scope.updateMarkers(foundRestaurants);
+    initialMarkers = $scope.map.markers;
+  });
+
+  // initial map
+  $scope.map = {
+    center: {
+      latitude: 41,
+      longitude: 2
+    },
+    zoom: 8,
+    markers: initialMarkers,
+    doCluster: true,
+    clusterOptions: {
+      title: 'More restaurants here',
+      gridSize: 60,
+      ignoreHidden: true,
+      minimumClusterSize: 2,
+      imageExtension: 'png',
+      imagePath: 'img/icon',
+      imageSizes: [72]
+    }
+  };
+
+  // HTML5 geolocation
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      $rootScope.currentPosition = position;
+      $scope.map.center = position.coords;
+      $scope.map.zoom = 15;
+
+      // reload restaurants from location
+      $scope.loading.show(loadingOptions);
+      restaurants.loadRestaurantsWithinGeoBox(position.coords).then($scope.updateMarkers);
+      $scope.$apply();
+    });
+  }
+
+  _.each($scope.map.markers, function (marker) {
+    marker.closeClick = function () {
+      marker.showWindow = false;
+      $scope.$apply();
+    };
+    marker.onClicked = function () {
+      // marker.showWindow = true;
+      // load translations
+    };
+  });
+
+  $scope.updateMarkers = function(someRestaurants) {
+    $scope.restaurants = someRestaurants;
+    $scope.map.markers = _.map(someRestaurants.models, function(rest) {
+      return {
+        latitude: rest.getLocation() ? rest.getLocation().latitude : 0.0,
+        longitude: rest.getLocation() ? rest.getLocation().longitude: 0.0,
+        id: rest.id,
+        templateUrl: 'templates/info-window.html',
+        templateParameter: {
+          id: rest.id,
+          title: rest.getName(),
+          address: rest.getAddress(),
+          logoUrl: rest.getLogoUrl()
+        },
+        icon: "img/icon.png"
+      };
+    });
+    $scope.loading.hide();
+  };
+}
+])
+
+.controller('RestaurantListCtrl', ['$scope', '$rootScope', '$stateParams', '$ionicNavBarDelegate', 'RestaurantService', 'CategoriesService',
+  function($scope, $rootScope, $stateParams, $ionicNavBarDelegate, RestaurantService, CategoriesService) {
+    var restaurants = new RestaurantService.collection();
+
+    $scope.updateList = function(foundRestaurants) {
+      var currentGeoPoint = new Parse.GeoPoint($rootScope.currentPosition.coords);
+      $scope.restaurants = _.map(foundRestaurants.models, function(restaurant) {
+        return {
+          id: restaurant.id,
+          name: restaurant.getName(),
+          logoUrl: restaurant.getLogoUrl(),
+          distance: currentGeoPoint.kilometersTo(restaurant.getLocation())
+        };
+      });
+    };
+
+    $scope.refreshRestaurants = function(position) {
+      $rootScope.currentPosition = position.coords;
+
+      if ($stateParams.categories) {
+        var categories = _.map($stateParams.categories.split(','), function(id) {
+          var category = new CategoriesService.model();
+          category.id = id;
+          return category;
+        });
+        restaurants.loadRestaurantsWithinGeoBoxAndCategories($rootScope.currentPosition, categories).then($scope.updateList);
+      } else {
+        restaurants.loadRestaurantsWithinGeoBox($rootScope.currentPosition).then($scope.updateList);
+      }
+    };
+
+    if ($rootScope.currentPosition) {
+      $scope.refreshRestaurants($rootScope.currentPosition);
+    } else if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition($scope.refreshRestaurants);
+    } else {
+      // TODO: error message? Alphabetical list?
+    }
+
+}])
+
+.controller('SearchCtrl', ['$scope',
+  function($scope) {
+}])
+
+.controller('SearchCategoryCtrl', ['$scope', '$state', 'TranslatedCategoriesService',
+  function($scope, $state, TranslatedCategoriesService) {
+    var categories = new TranslatedCategoriesService.collection();
+
+    $scope.loadCategories = function(language) {
+      categories.loadGeneralCategoriesOfLanguage(language).then(function(foundCategories) {
+        $scope.categories = _.map(foundCategories.models, function(category) {
+          return {
+            id: category.get('category').id,
+            name: category.getName(),
+            checked: false
+          };
+        });
+      });
+    };
+
+    // get current language
+    if (navigator.globalization) {
+      navigator.globalization.getPreferredLanguage($scope.loadCategories);
+    } else {
+      var language = navigator.language.split('-')[0];
+      $scope.loadCategories(language);
+    }
+
+    $scope.search = function(selectedCategories) {
+      // get selected categories
+      var selectedCategories = _.pluck(_.filter($scope.categories, function(category) {
+        return category.checked;
+      }), 'id');
+      console.log(selectedCategories);
+      // TODO search
+      $state.go('restaurants', {categories: selectedCategories});
+    };
+}]);

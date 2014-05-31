@@ -29,7 +29,6 @@ img.logo {
 }
 
 /* Vista info restaurant */
-
 .infowindow {
 }
 .infowindow .flotant {
@@ -156,4 +155,8 @@ a.item:after, button.item:after, .item a[href].item-content:after,
     font-family: 'Ionicons';
     line-height: 1;
     speak: none;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> FETCH_HEAD

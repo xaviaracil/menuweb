@@ -1,12 +1,14 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
+// 'menuweb' is the name of this angular module (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
-
+// 'menuweb.controllers' is found in controllers.js
+// 'menuweb.filters' is found in filters.js
+angular.module('menuweb', ['ionic',
+  'menuweb.controllers',
+  'menuweb.filters',
+  'ParseServices',
+  'ExternalDataServices',
+  'google-maps'
+])
 
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -14,99 +16,56 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
-  /*$stateProvider
+  $stateProvider
 
-    // setup an abstract state for the tabs directive
-    .state('tab', {
-      url: "/tab",
-      abstract: true,
-      templateUrl: "templates/tabs.html"
-    })
-
-    // the pet tab has its own child nav-view and history
-    .state('tab.pet-index', {
-      url: '/pets',
+    .state('map', {
+      url: "/",
       views: {
-        'pets-tab': {
-          templateUrl: 'templates/pet-index.html',
-          controller: 'PetIndexCtrl'
+        'home': {
+          templateUrl: 'templates/restaurant-map.html',
+          controller: 'RestaurantMapCtrl'
         }
       }
     })
-
-    .state('tab.pet-detail', {
-      url: '/pet/:petId',
+    .state('restaurants', {
+      url: "/restaurants?categories",
       views: {
-        'pets-tab': {
-          templateUrl: 'templates/pet-detail.html',
-          controller: 'PetDetailCtrl'
+        'home': {
+          templateUrl: 'templates/restaurant-list.html',
+          controller: 'RestaurantListCtrl'
         }
       }
     })
-
-    .state('tab.adopt', {
-      url: '/adopt',
+    .state('restaurant', {
+      url: "/restaurants/:restaurantId",
+      templateUrl: 'templates/restaurant.html',
+      controller: 'RestaurantCtrl'
+    })
+    .state('search', {
+      url: "/search",
       views: {
-        'adopt-tab': {
-          templateUrl: 'templates/adopt.html'
+        'home': {
+          templateUrl: 'templates/advanced-search.html',
+          controller: 'SearchCtrl'
         }
       }
     })
-
-    .state('tab.about', {
-      url: '/about',
+    .state('searchcategory', {
+      url: "/categories",
       views: {
-        'about-tab': {
-          templateUrl: 'templates/about.html'
+        'home': {
+          templateUrl: 'templates/advanced-search-category.html',
+          controller: 'SearchCategoryCtrl'
         }
       }
     });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/pets');*/
+  $urlRouterProvider.otherwise('/');
+})
 
-});
-
-// Arantxa JS for #map:  No funciona, he acabado incrustando el mapa con un iframe
-
-angular.module('ionic.example', ['ionic'])
-
-    .controller('MapCtrl', function($scope, $ionicLoading) {
-      function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(43.07493,-89.381388),
-          zoom: 16,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map"),
-            mapOptions);
-
-        // Stop the side bar from dragging when mousedown/tapdown on the map
-        google.maps.event.addDomListener(document.getElementById('map'), 'mousedown', function(e) {
-          e.preventDefault();
-          return false;
-        });
-
-        $scope.map = map;
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-      
-      $scope.centerOnMe = function() {
-        if(!$scope.map) {
-          return;
-        }
-
-        $scope.loading = $ionicLoading.show({
-          content: 'Getting current location...',
-          showBackdrop: false
-        });
-
-        navigator.geolocation.getCurrentPosition(function(pos) {
-          $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-          $scope.loading.hide();
-        }, function(error) {
-          alert('Unable to get location: ' + error.message);
-        });
-      };
-    });
-
+.run(['ParseSDK', 'ExtendParseSDK', '$rootScope', '$state', '$stateParams',
+ function(ParseService, ExtendParseSDK, $rootScope, $state, $stateParams) {
+   $rootScope.$state = $state;
+   $rootScope.$stateParams = $stateParams;
+}]);

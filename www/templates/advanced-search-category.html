@@ -1,0 +1,16 @@
+<ion-view title="Busca por tipo de cocina">
+  <ion-content class="scroll-content has-header">
+    <ion-list>
+      <ion-item ng-repeat="category in categories"
+                class="item item-checkbox">
+        {{category.name}}
+        <label class="checkbox">
+          <input type="checkbox" ng-model="category.checked" ng-true-value="{{ category.id }}">
+        </label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  <ion-footer-bar>
+    <button class="button button-full button-positive icon ion-search" ng-click="search()"> Buscar</button>
+  </ion-footer-bar>
+</ion-view>
