@@ -28,7 +28,8 @@ img.logo {
   height: 100%;
 }
 
-/* Vista info restaurant */
+/* Vista info restaurant al mapa */
+
 .infowindow {
 }
 .infowindow .flotant {
@@ -67,22 +68,48 @@ div.row, div.row div.col.card {
 	margin: 0;
 	padding: 0;
 }
+.option:first-child {
+	padding: 15px 0 1px 0;
+}
 .option p {
-    padding: 10px 10px 0;
+    padding: 10px 2% 0;
+	color: #555a5d
 }
 .img-full img {
 	max-width: 100%;
 }
-
+.list .item-avatar img:first-child, .list .item-avatar .item-img {
+	border-radius: 0 10px;
+}
+ul.list li {
+	
+}
+ul.list li h4 {
+	color: rgba(0, 103, 180, 0.75);
+	float: left;
+	margin-right: 5px;
+}
 /* Advanced Search page */
+
 .list-inset {
     margin: 10px;
 }
 .item-input {
     padding: 6px 15px 5px 8px;
 }
+.item {
+	border-color: rgba(0, 103, 180, 0.5);
+}
+.list.card a.item {
+	color: #0067b4;
+}
+.item.active:not(.item-divider):not(.item-input):not(.item-input-inset), .item-complex.active .item-content {
+background-color: rgba(0, 103, 180, 0.19);
+border-color: #ccc;
+}
 
 /* Menu Categories */
+
 ul.list.categories .item-divider {
 	padding-top: 15px;
 	padding-bottom: 15px;
@@ -145,7 +172,7 @@ a.item:after, button.item:after, .item a[href].item-content:after,
     top: 0;
     right: 11px;
     height: 100%;
-    color: #ccc;
+    color: rgba(0, 103, 180, 0.75);
     content: "\f125";
     text-transform: none;
     font-weight: normal;
@@ -155,8 +182,4 @@ a.item:after, button.item:after, .item a[href].item-content:after,
     font-family: 'Ionicons';
     line-height: 1;
     speak: none;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> FETCH_HEAD
