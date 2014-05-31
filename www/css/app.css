@@ -11,21 +11,26 @@ img.logo {
 }
 /* MAPA */
 
-#map {
+#map/*, .angular-google-map-container*/ {
   width: 100%;
   height: 100%;
+}
+
+.angular-google-map {
+  display: block;
+}
+/* google maps */
+.angular-google-map-container {
+  height: 480px;
 }
 
 .scroll {
   height: 100%;
 }
+
 /* Vista info restaurant */
 
 .infowindow {
-	/* borrar las siguientes CSS, modificar posición mediante Js */
-	position: absolute;
-	top: 150px;
-	right: 25px;/* Borrar hasta aquí */
 }
 .infowindow .flotant {
 	position: relative;
@@ -37,29 +42,18 @@ img.logo {
 	background: #FFF;
 	font-size: 0.5em;
 	line-height: 1.5em;
-	/*border: 1px solid #0067b4;
-	box-shadow: 1px 1px 1px #0067b4;
-	-webkit-box-shadow: 1px 1px 1px #0067b4;
-	-moz-box-shadow: 1px 1px 1px #0067b4;*/
 }
 .flotant .fletxa {
   position: absolute;
-  width: 25px;
-  height: 13px;
+  width: 35px;
+  height: 20px;
   background: url(../img/flotant-fletxa.svg) no-repeat top left;
-  top: -1px;
-  left: 15px;
+  bottom: 3px;
+  left: 25px;
 }
 .infowindow .fbottom {
   padding-top: 0;
   padding-bottom: 16px;
-}
-.infowindow .fbottom .fletxa {
-  bottom: 0;
-  background-position: bottom;
-  height: 18px;
-  right: 10px;
-  top: auto;
 }
 .infowindow .item p {
 	overflow: visible;
@@ -88,6 +82,14 @@ div.row, div.row div.col.card {
 .item-input {
     padding: 6px 15px 5px 8px;
 }
+
+/* Menu Categories */
+ul.list.categories .item-divider {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	font-weight: bold;
+}
+
 /* Menu pages */
 
 ul.list.menu-view .item-divider {
@@ -111,4 +113,47 @@ ul.list.menu-view .item span {
 .bar-footer .button.button-full {
 	margin: 0;
 	font-size: 15px;
+}
+
+/**
+ * Auto Right Arrow Icon
+ * --------------------------------------------------
+ * By default, if an .item is created out of an <a> or <button>
+ * then a arrow will be added to the right side of the item.
+ */
+a.item,
+button.item, .item a[href].item-content, .item[ng-click] a.item-content {
+    padding-right: 40px;
+}
+
+a.item:after, button.item:after, .item a[href].item-content:after,
+.item[ng-click] a.item-content:after {
+    /* By default, both <a> and <button> have right side arrow icons */
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    position: absolute;
+    top: 0;
+    right: 11px;
+    height: 100%;
+    color: #ccc;
+    content: "\f125";
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+    font-size: 16px;
+    font-family: 'Ionicons';
+    line-height: 1;
+    speak: none;
 }
