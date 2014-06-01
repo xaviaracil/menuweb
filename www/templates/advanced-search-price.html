@@ -1,0 +1,16 @@
+<ion-view title="Busca por rango de precio">
+  <ion-content class="scroll-content has-header">
+    <ion-list>
+      <ion-item ng-repeat="pricerange in priceranges"
+                class="item item-checkbox">
+        {{pricerange.name}}
+        <label class="checkbox">
+          <input type="checkbox" ng-model="pricerange.checked" ng-true-value="{{ pricerange.id }}">
+        </label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  <ion-footer-bar>
+    <button class="button button-full button-positive icon ion-search" ng-click="search()"> Buscar</button>
+  </ion-footer-bar>
+</ion-view>

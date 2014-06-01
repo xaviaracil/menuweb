@@ -7,4 +7,13 @@ angular.module('menuweb.filters', [])
     }
     return input + " kms.";
   };
+})
+
+.filter('name', function() {
+  return function(input, availableValues) {
+    var element = _.first(_.filter(availableValues, function(item) {
+      return item.id === input;
+    }));
+    return element ? element.name : 'Not available';
+  };
 });

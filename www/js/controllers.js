@@ -47,8 +47,8 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       gridSize: 60,
       ignoreHidden: true,
       minimumClusterSize: 2,
-      imageExtension: 'png',
-      imagePath: 'img/icon',
+      imageExtension: 'svg',
+      imagePath: 'img/pin',
       imageSizes: [72]
     }
   };
@@ -92,7 +92,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
           address: rest.getAddress(),
           logoUrl: rest.getLogoUrl()
         },
-        icon: "img/icon.png"
+        icon: "img/pin.svg"
       };
     });
     $scope.loading.hide();
@@ -104,6 +104,12 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
   function($scope, $rootScope, $stateParams, $ionicNavBarDelegate, RestaurantService, CategoriesService) {
     var restaurants = new RestaurantService.collection();
 
+    Parse.Cloud.run('priceranges', null, {
+      success: function(priceranges) {
+        $scope.priceranges = priceranges;
+      }
+    });
+
     $scope.updateList = function(foundRestaurants) {
       var currentGeoPoint = new Parse.GeoPoint($rootScope.currentPosition.coords);
       $scope.restaurants = _.map(foundRestaurants.models, function(restaurant) {
@@ -111,6 +117,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
           id: restaurant.id,
           name: restaurant.getName(),
           logoUrl: restaurant.getLogoUrl(),
+          priceRange: restaurant.getPriceRange(),
           distance: currentGeoPoint.kilometersTo(restaurant.getLocation())
         };
       });
@@ -126,6 +133,9 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
           return category;
         });
         restaurants.loadRestaurantsWithinGeoBoxAndCategories($rootScope.currentPosition, categories).then($scope.updateList);
+      } else if ($stateParams.priceranges) {
+        var priceRanges = $stateParams.priceranges.split(',');
+        restaurants.loadRestaurantsWithinGeoBoxAndPriceRanges($rootScope.currentPosition, priceRanges).then($scope.updateList);
       } else {
         restaurants.loadRestaurantsWithinGeoBox($rootScope.currentPosition).then($scope.updateList);
       }
@@ -169,13 +179,39 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       $scope.loadCategories(language);
     }
 
-    $scope.search = function(selectedCategories) {
+    $scope.search = function() {
       // get selected categories
       var selectedCategories = _.pluck(_.filter($scope.categories, function(category) {
         return category.checked;
       }), 'id');
       console.log(selectedCategories);
-      // TODO search
+      //  search
       $state.go('restaurants', {categories: selectedCategories});
+    };
+}])
+
+.controller('SearchPriceCtrl', ['$scope', '$state',
+  function($scope, $state) {
+    Parse.Cloud.run('priceranges', null, {
+      success: function(foundPriceRanges) {
+        $scope.priceranges = _.map(foundPriceRanges, function(priceRange) {
+          return {
+            id: priceRange.id,
+            name: priceRange.name,
+            checked: false
+          };
+        });
+        $scope.$apply();
+      }
+    });
+
+    $scope.search = function() {
+      // get selected price ranges
+      var selectedPriceRanges = _.pluck(_.filter($scope.priceranges, function(pricerange) {
+        return pricerange.checked;
+      }), 'id');
+      console.log(selectedPriceRanges);
+      // search
+      $state.go('restaurants', {priceranges: selectedPriceRanges});
     };
 }]);
