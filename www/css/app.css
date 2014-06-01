@@ -64,9 +64,21 @@ img.logo {
 .bar.bar-positive, .bar-footer .button-positive, .button.button-positive, .button.button-positive.active {
 	background-color: #0067b4;
 }
-div.row, div.row div.col.card {
-	margin: 0;
-	padding: 0;
+.card .item.description p, .card .item.price p {
+	text-align: center;
+	margin-bottom: 2px;
+}
+.card .item.price p {
+	color: #0067b4;
+}
+.card .button-bar button {
+	font-size: 11px;
+}
+.card .button-bar .button.button-light {
+	border-color: rgba(0, 103, 180, 0.5);
+}
+.card .button .icon:before, .card .button.icon:before, .card .button.icon-left:before, .card .button.icon-right:before {
+	color: #0067b4;
 }
 .option:first-child {
 	padding: 15px 0 1px 0;
@@ -75,19 +87,30 @@ div.row, div.row div.col.card {
     padding: 10px 2% 0;
 	color: #555a5d
 }
-.img-full img {
-	max-width: 100%;
-}
 .list .item-avatar img:first-child, .list .item-avatar .item-img {
-	border-radius: 0 10px;
+	border-radius: 2px;
+	max-width: 50px;
+	max-height: 50px;
 }
 ul.list li {
 	
 }
+ul.list li h2 {
+	position: relative;
+}
 ul.list li h4 {
 	color: rgba(0, 103, 180, 0.75);
-	float: left;
 	margin-right: 5px;
+}
+ul.list li h2, ul.list li h4 {
+	margin-bottom: 1px;
+}
+ul.list li h4.detall {
+	position: absolute;
+	right: 10%;
+	top: 20px;
+	font-size: 14px;
+	color: #aaa9a9;
 }
 /* Advanced Search page */
 
@@ -99,6 +122,9 @@ ul.list li h4 {
 }
 .item {
 	border-color: rgba(0, 103, 180, 0.5);
+}
+.item-avatar {
+	padding-left: 75px;
 }
 .list.card a.item {
 	color: #0067b4;

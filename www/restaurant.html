@@ -38,25 +38,42 @@
     <ion-content class="scroll-content has-header">
       <div class="row">
         <div class="col card">
-          <img class="full-image" src="img/muestra_img.jpg">
-          <div class="item">
+			<div class="item">
             <h2>La Taqueria</h2>
-            <p>Passatge de Font, 5.</p>
-            <p>08018. Barcelona.</p>
+            <p>Passatge de Font, 5. 08018 Barcelona.</p>
           </div>
+          <img class="full-image" src="img/taqueria2.jpg">
+			<div class="item description">
+          		<p>Auténtica gastronomía callejera mexicana</p>
+				<p>mexican street food!</p> 
+				<p>¡Pá comer chingón!</p>
+			</div>
+			<div class="item price">
+				<p>Precio medio de la carta: 35€</p>
+			</div>
           <div class="button-bar">
+            <button ng-show="map" class="button button-light icon ion-location" open-url="#"> Ver en mapa</button>
+            <button ng-show="userLocation" class="button button-light icon ion-navigate" open-url="#"> Cómo llegar</button>
+            <button  class="button button-light icon ion-ios7-telephone"> Llamar </button>
+          </div>
+        </div>
+      </div>
+		<!-- div class="list card">
+			<div class="item item-avatar">
+    			<img src="img/taqueria.jpg">
+    			<h2>La Taqueria</h2>
+    			<p>Passatge de Font, 5.</p>
+            	<p>08018. Barcelona.</p>
+  			</div>
+			<div class="button-bar">
             <button ng-show="map" class="button button-light icon ion-location" open-url="#"> Location</button>
             <button ng-show="userLocation" class="button button-light icon ion-navigate" open-url="#"> Go!</button>
             <button  class="button button-light icon ion-ios7-telephone"> Call</button>
           </div>
-        </div>
-      </div>
-      <!-- div class="row padding">
-
-      </div -->
+		</div -->
     </ion-content>
     <div class="bar bar-footer bar-positive">
-      <button class="button button-full button-positive icon ion-spoon"> Ver Menu</button>
+      <button class="button button-full button-positive icon ion-clipboard"> Ver Menu</button>
     </div>
     <!-- /ion-nav-view -->
   </body>
