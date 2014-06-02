@@ -49,7 +49,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       minimumClusterSize: 2,
       imageExtension: 'svg',
       imagePath: 'img/pin',
-      imageSizes: [72]
+      imageSizes: [32]
     }
   };
 
