@@ -7,7 +7,8 @@ angular.module('menuweb', ['ionic',
   'menuweb.filters',
   'ParseServices',
   'ExternalDataServices',
-  'google-maps'
+  'google-maps',
+  'ngCordova'
 ])
 
 .config(function($stateProvider, $urlRouterProvider) {
