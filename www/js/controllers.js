@@ -90,7 +90,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
           id: rest.id,
           title: rest.getName(),
           address: rest.getAddress(),
-          logoUrl: rest.getLogoUrl()
+          logoUrl: rest.getLogoFile()
         },
         icon: "img/pin.svg"
       };
@@ -116,7 +116,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
         return {
           id: restaurant.id,
           name: restaurant.getName(),
-          logoUrl: restaurant.getLogoUrl(),
+          logoUrl: restaurant.getLogoFile(),
           priceRange: restaurant.getPriceRange(),
           distance: currentGeoPoint.kilometersTo(restaurant.getLocation())
         };

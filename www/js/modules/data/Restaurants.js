@@ -61,14 +61,26 @@ angular.module('ExternalDataServices')
 			return this.get('translated');
 		},
 		setPriceRange: function(pricerange) {
-    		this.set('priceRange', pricerange);
-    		return this;
+			this.set('priceRange', pricerange);
+			return this;
 		},
 		getPriceRange: function() {
-    		return this.get('priceRange');
+			return this.get('priceRange');
 		},
-		getLogoUrl: function() {
-			return "img/icon.png"; // TODO change
+		setLogoFile: function(logoFile) {
+			this.set("logoFile", logoFile);
+			return this;
+		},
+		getLogoFile: function() {
+			var logoFile = this.get("logoFile");
+			return logoFile ? logoFile.url() : "img/defaultIcon.png";
+		},
+		getDescription: function() {
+			return this.get("description");
+		},
+		setDescription: function(description) {
+			this.set("description", description);
+			return this;
 		},
 		destroyParse:function(){
 			return ParseQueryAngular(this,{functionToCall:'destroy'}); // jshint ignore:line
