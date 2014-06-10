@@ -29,7 +29,7 @@ angular.module('menuweb', ['ionic',
       }
     })
     .state('restaurants', {
-      url: "/restaurants?categories&priceranges",
+      url: "/restaurants?categories&priceranges&languages",
       views: {
         'home': {
           templateUrl: 'templates/restaurant-list.html',
@@ -66,6 +66,15 @@ angular.module('menuweb', ['ionic',
         'home': {
           templateUrl: 'templates/advanced-search-price.html',
           controller: 'SearchPriceCtrl'
+        }
+      }
+    })
+    .state('searchlanguage', {
+      url: "/language",
+      views: {
+        'home': {
+          templateUrl: 'templates/advanced-search-language.html',
+          controller: 'SearchLanguageCtrl'
         }
       }
     });

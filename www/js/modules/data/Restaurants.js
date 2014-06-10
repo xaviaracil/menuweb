@@ -89,6 +89,7 @@ angular.module('ExternalDataServices')
 
 	var Restaurants = Parse.Collection.extendAngular({
 		model: Restaurant,
+		withinKilometers: 5,
 		comparator: function(model) {
 			return -model.createdAt.getTime();
 		},
@@ -113,9 +114,8 @@ angular.module('ExternalDataServices')
 		},
 		loadRestaurantsWithinGeoBox: function(point) {
 			this.query = (new Parse.Query(Restaurant));
-			// geopoint query, 5 km distance
-			this.query.withinKilometers('location', point, 5);
-			// use the enhanced load() function to fetch the collection
+			this.query.withinKilometers('location', point, this.withinKilometers);
+
 			return this.load();
 		},
 		loadRestaurantsWithinGeoBoxAndCategories: function(point, categories) {
@@ -124,9 +124,10 @@ angular.module('ExternalDataServices')
 			}
 
 			if (_.isArray(categories)) {
+				var self = this;
 				var categoriesQueries = _.map(categories, function(category) {
 					var query = new Parse.Query(Restaurant);
-					query.withinKilometers('location', point, 5); // geopoint query, 5 km distance
+					query.withinKilometers('location', point, self.withinKilometers);
 					query.equalTo('generalCategories', category);
 					return query;
 				});
@@ -139,7 +140,7 @@ angular.module('ExternalDataServices')
 				this.query = (new Parse.Query(Restaurant));
 				this.query.equalTo('generalCategories', categories);
 				// geopoint query, 5 km distance
-				this.query.withinKilometers('location', point, 5);
+				this.query.withinKilometers('location', point, this.withinKilometers);
 			}
 
 			// use the enhanced load() function to fetch the collection
@@ -151,9 +152,10 @@ angular.module('ExternalDataServices')
 			}
 
 			if (_.isArray(priceRanges)) {
+				var self = this;
 				var priceRangesQueries = _.map(priceRanges, function(priceRange) {
 					var query = new Parse.Query(Restaurant);
-					query.withinKilometers('location', point, 5); // geopoint query, 5 km distance
+					query.withinKilometers('location', point, self.withinKilometers);
 					query.equalTo('priceRange', _.isNumber(priceRange) ? priceRange : parseInt(priceRange));
 					return query;
 				});
@@ -166,7 +168,36 @@ angular.module('ExternalDataServices')
 				this.query = (new Parse.Query(Restaurant));
 				this.query.equalTo('priceRange', _.isNumber(priceRange) ? priceRange : parseInt(priceRange));
 				// geopoint query, 5 km distance
-				this.query.withinKilometers('location', point, 5);
+				this.query.withinKilometers('location', point, this.withinKilometers);
+			}
+
+			// use the enhanced load() function to fetch the collection
+			return this.load();
+		},
+
+		loadRestaurantsWithinGeoBoxAndLanguages: function(point, languages) {
+			if (!languages || !_.size(languages)) {
+				return this.loadRestaurantsWithinGeoBox(point);
+			}
+
+			if (_.isArray(languages)) {
+				var self = this;
+				var languagesQueries = _.map(languages, function(language) {
+					var query = new Parse.Query(Restaurant);
+					query.withinKilometers('location', point, self.withinKilometers);
+					query.equalTo('languages', language);
+					return query;
+				});
+				if (_.size(languagesQueries) === 1) {
+					this.query = _.first(languagesQueries);
+				} else {
+					this.query = Parse.Query.or.apply(null, languagesQueries);
+				}
+			} else {
+				this.query = (new Parse.Query(Restaurant));
+				this.query.equalTo('languages', languages);
+				// geopoint query, 5 km distance
+				this.query.withinKilometers('location', point, this.withinKilometers);
 			}
 
 			// use the enhanced load() function to fetch the collection

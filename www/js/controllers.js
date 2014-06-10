@@ -136,6 +136,9 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       } else if ($stateParams.priceranges) {
         var priceRanges = $stateParams.priceranges.split(',');
         restaurants.loadRestaurantsWithinGeoBoxAndPriceRanges($rootScope.currentPosition, priceRanges).then($scope.updateList);
+      } else if ($stateParams.languages) {
+        var languages = $stateParams.languages.split(',');
+        restaurants.loadRestaurantsWithinGeoBoxAndLanguages($rootScope.currentPosition, languages).then($scope.updateList);
       } else {
         restaurants.loadRestaurantsWithinGeoBox($rootScope.currentPosition).then($scope.updateList);
       }
@@ -210,8 +213,32 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       var selectedPriceRanges = _.pluck(_.filter($scope.priceranges, function(pricerange) {
         return pricerange.checked;
       }), 'id');
-      console.log(selectedPriceRanges);
       // search
       $state.go('restaurants', {priceranges: selectedPriceRanges});
+    };
+}])
+
+.controller('SearchLanguageCtrl', ['$scope', '$state',
+  function($scope, $state) {
+    Parse.Cloud.run('languages', null, {
+      success: function(foundLanguages) {
+        $scope.languages = _.map(foundLanguages, function(language) {
+          return {
+            id: language.id,
+            name: language.name,
+            checked: false
+          };
+        });
+        $scope.$apply();
+      }
+    });
+
+    $scope.search = function() {
+      // get selected languages
+      var selectedLanguages = _.pluck(_.filter($scope.languages, function(language) {
+        return language.checked;
+      }), 'id');
+      // search
+      $state.go('restaurants', {languages: selectedLanguages});
     };
 }]);
