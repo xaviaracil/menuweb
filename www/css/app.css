@@ -64,21 +64,32 @@ img.logo {
 .bar.bar-positive, .bar-footer .button-positive, .button.button-positive, .button.button-positive.active {
 	background-color: #0067b4;
 }
+h2.title {
+	border-bottom: 1px solid rgba(0, 103, 180, 0.5);
+}
 .card .item.description p, .card .item.price p {
 	text-align: center;
 	margin-bottom: 2px;
 }
-.card .item.price p {
+/*.card .item.price p {
 	color: #0067b4;
-}
+}*/
 .card .button-bar button {
-	font-size: 11px;
+	font-size: 14px;
 }
 .card .button-bar .button.button-light {
 	border-color: rgba(0, 103, 180, 0.5);
+	color: #0067b4;
 }
 .card .button .icon:before, .card .button.icon:before, .card .button.icon-left:before, .card .button.icon-right:before {
 	color: #0067b4;
+}
+.button .icon:before, .button.icon:before, .button.icon-left:before, .button.icon-right:before {
+	font-size: 26px;
+	margin-right: 2px;
+}
+.button-bar > .button {
+	padding: 0 12px;
 }
 .option:first-child {
 	padding: 15px 0 1px 0;
@@ -112,6 +123,12 @@ ul.list li h4.detall {
 	font-size: 14px;
 	color: #aaa9a9;
 }
+.checkbox input:before {
+	border: 1px solid #0067b4;
+}
+.checkbox input:checked:before {
+background: #0067b4;
+}
 /* Advanced Search page */
 
 .list-inset {
@@ -136,16 +153,20 @@ border-color: #ccc;
 
 /* Menu Categories */
 
-ul.list.categories .item-divider {
+div.list.categories .item-divider {
 	padding-top: 15px;
 	padding-bottom: 15px;
 	font-weight: bold;
+	color: #0067b4;
 }
 
 /* Menu pages */
 
 ul.list.menu-view .item-divider {
 	text-align: center;
+	padding: 15px 0;
+	margin-top: 20px;
+	color: #0067b4;
 }
 ul.list.menu-view .item {
 	position: relative;
@@ -161,6 +182,9 @@ ul.list.menu-view .item span {
 	position: absolute;
 	right: 15px;
 	top: 15px;
+	color: rgb(149, 147, 147);
+	font-size: 0.8em;
+	color: #0067b4;
 }
 .bar-footer .button.button-full {
 	margin: 0;
