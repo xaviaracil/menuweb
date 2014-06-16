@@ -20,6 +20,6 @@ angular.module('menuweb.filters', [])
 
 .filter('address', function() {
   return function(input) {
-    return input.getAddress() + ". " + input.getPostalCode() + " " + input.getCity();
+    return input ? input.getAddress() + ". " + input.getPostalCode() + " " + input.getCity() : '';
   };
 });
