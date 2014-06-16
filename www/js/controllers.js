@@ -2,6 +2,7 @@ angular.module('menuweb.controllers', [])
 
 .controller('RestaurantMapCtrl', ['$scope', '$rootScope', '$state', '$ionicLoading', 'RestaurantService',
 function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
+  /*
   var loadingOptions = {
     // The text to display in the loading indicator
     content: 'Loading',
@@ -21,8 +22,8 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
   };
 
   // Show the loading overlay and text
-  $scope.loading = $ionicLoading.show(loadingOptions);
-
+  $ionicLoading.show(loadingOptions);
+*/
   // get the collection from our data definitions
   var restaurants = new RestaurantService.collection();
   var initialMarkers = [];
@@ -61,7 +62,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       $scope.map.zoom = 15;
 
       // reload restaurants from location
-      $scope.loading.show(loadingOptions);
+      //$ionicLoading.show(loadingOptions);
       restaurants.loadRestaurantsWithinGeoBox(position.coords).then($scope.updateMarkers);
       $scope.$apply();
     });
@@ -95,7 +96,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
         icon: "img/pin.svg"
       };
     });
-    $scope.loading.hide();
+    //$scope.loading.hide();
   };
 }
 ])
@@ -152,6 +153,30 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       // TODO: error message? Alphabetical list?
     }
 
+}])
+
+.controller('RestaurantCtrl', ['$scope', '$stateParams', '$ionicLoading', 'RestaurantService',
+  function($scope, $stateParams, $ionicLoading, RestaurantService) {
+    Parse.Cloud.run('priceranges', null, {
+      success: function(foundPriceRanges) {
+        $scope.priceranges = _.map(foundPriceRanges, function(priceRange) {
+          return {
+            id: priceRange.id,
+            name: priceRange.name,
+            checked: false
+          };
+        });
+        $scope.$apply();
+      }
+    });
+
+    var restaurant = new RestaurantService.model();
+    restaurant.id = $stateParams.restaurantId;
+    restaurant.load().then(function(foundRestaurant) {
+      $scope.rest = foundRestaurant;
+    });
+
+    // TODO: complete
 }])
 
 .controller('SearchCtrl', ['$scope',

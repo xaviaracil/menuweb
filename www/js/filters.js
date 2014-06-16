@@ -16,4 +16,10 @@ angular.module('menuweb.filters', [])
     }));
     return element ? element.name : 'Not available';
   };
+})
+
+.filter('address', function() {
+  return function(input) {
+    return input.getAddress() + ". " + input.getPostalCode() + " " + input.getCity();
+  };
 });

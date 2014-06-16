@@ -39,8 +39,12 @@ angular.module('menuweb', ['ionic',
     })
     .state('restaurant', {
       url: "/restaurants/:restaurantId",
-      templateUrl: 'templates/restaurant.html',
-      controller: 'RestaurantCtrl'
+      views: {
+        'home': {
+          templateUrl: 'templates/restaurant.html',
+          controller: 'RestaurantCtrl'
+        }
+      }
     })
     .state('search', {
       url: "/search",
