@@ -73,7 +73,7 @@ angular.module('ExternalDataServices')
 		},
 		getLogoFile: function() {
 			var logoFile = this.get("logoFile");
-			return logoFile ? logoFile.url() : "img/defaultIcon.png";
+			return logoFile ? logoFile.url() : "img/imagotipo.svg";
 		},
 		getDescription: function() {
 			return this.get("description");

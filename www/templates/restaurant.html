@@ -6,7 +6,7 @@
           <h2>{{ rest.getName() }}</h2>
           <p>{{ rest | address }}</p>
         </div>
-        <img class="full-image" src="{{ rest.logoUrl }}">
+        <img class="full-image" ng-src="{{ rest.getLogoFile() }}">
         <div class="item description">
           {{ rest.getDescription() }}
         </div>
