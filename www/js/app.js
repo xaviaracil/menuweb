@@ -47,11 +47,20 @@ angular.module('menuweb', ['ionic',
       }
     })
     .state('restaurant.menu', {
-      url: "/menu",
+      url: "/menu?translation",
       views: {
         'home@': {
           templateUrl: 'templates/restaurant-menu.html',
           controller: 'RestaurantMenuCtrl'
+        }
+      }
+    })
+    .state('restaurant.language', {
+      url: "/language",
+      views: {
+        'home@': {
+          templateUrl: 'templates/restaurant-language.html',
+          controller: 'RestaurantLanguageCtrl'
         }
       }
     })

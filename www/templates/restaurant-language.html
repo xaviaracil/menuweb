@@ -1,0 +1,13 @@
+<ion-view title="Cambia de idioma">
+  <ion-content class="scroll-content has-header">
+    <ion-list>
+      <a ng-repeat="translation in translations"
+             class="item item-radio"
+             ui-sref="restaurant.menu({restaurantId: currentRestaurant.id, translation: translation.id})">
+        <input type="radio" name="group" value="{{translation.language}}">
+        <div class="item-content">{{translation.language | name:languages}}</div>
+        <i class="radio-icon ion-checkmark"></i>
+      </a>
+    </ion-list>
+  </ion-content>
+</ion-view>

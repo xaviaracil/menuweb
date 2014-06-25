@@ -197,23 +197,33 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       });
     }
 
+    $scope.loadCategoriesOfTranslation = function(translation) {
+      var categories = new TranslatedCategoriesService.collection();
+
+      categories.loadCategoriesOfTranslation(translation).then(function(foundCategories) {
+        console.log(foundCategories);
+        if (!foundCategories.length) {
+          // TODO: redirect to dishes listing
+        } else {
+          $scope.categories = _.map(foundCategories.models, function(category) {
+            return {
+              id: category.id,
+              name: category.getName()
+            };
+          });          
+        }
+      });
+
+    };
     $scope.loadCategories = function(language) {
       var translations = new TranslationService.collection();
       translations.loadTranslationsOfRestaurantAndLanguage($rootScope.currentRestaurant, language).then(function(foundTranslations) {
         var translation = _.first(foundTranslations.models);
         if (translation) {
-          var categories = new TranslatedCategoriesService.collection();
-
-          categories.loadCategoriesOfTranslation(translation).then(function(foundCategories) {
-            $scope.categories = _.map(foundCategories.models, function(category) {
-              return {
-                id: category.id,
-                name: category.getName()
-              };
-            });
-          });
+          $scope.loadCategoriesOfTranslation(translation);
         } else {
-          // TODO: maybe redirect to a language selector??
+          // redirect to a language selector??
+          $scope.goToLanguage();
         }
       });
     };
@@ -222,12 +232,19 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       $state.go('restaurant.language');
     };
 
-    // get current language
-    if (navigator.globalization) {
-      navigator.globalization.getPreferredLanguage($scope.loadCategories);
+    if ($stateParams.translation) {
+      // already a translation defined
+      var translation = new TranslationService.model();
+      translation.id = $stateParams.translation;
+      $scope.loadCategoriesOfTranslation(translation);
     } else {
-      var language = navigator.language.split('-')[0];
-      $scope.loadCategories(language);
+      // get current language
+      if (navigator.globalization) {
+        navigator.globalization.getPreferredLanguage($scope.loadCategories);
+      } else {
+        var language = navigator.language.split('-')[0];
+        $scope.loadCategories(language);
+      }
     }
 
 }])
@@ -269,6 +286,45 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       //  search
       $state.go('restaurants', {categories: selectedCategories});
     };
+}])
+
+.controller('RestaurantLanguageCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'RestaurantService', 'TranslationService',
+  function($scope, $rootScope, $state, $stateParams, RestaurantService, TranslationService) {
+    Parse.Cloud.run('languages', null, {
+      success: function(foundLanguages) {
+        $scope.languages = _.map(foundLanguages, function(language) {
+          return {
+            id: language.id,
+            name: language.name,
+            checked: false
+          };
+        });
+        $scope.$apply();
+      }
+    });
+    $scope.loadTranslations = function() {
+      // load translations of restaurant
+      var translations = new TranslationService.collection();
+      translations.loadTranslationsOfRestaurant($rootScope.currentRestaurant).then(function(foundTranslations) {
+        $scope.translations = _.map(foundTranslations.models, function(translation) {
+          return  {
+            id: translation.id,
+            language: translation.getLanguage()
+          };
+        });
+      });
+    };
+
+    if (!$rootScope.currentRestaurant) {
+      var restaurant = new RestaurantService.model();
+      restaurant.id = $stateParams.restaurantId;
+      restaurant.load().then(function(foundRestaurant) {
+        $rootScope.currentRestaurant = foundRestaurant;
+        $scope.loadTranslations();
+      });
+    } else {
+      $scope.loadTranslations();
+    }
 }])
 
 .controller('SearchPriceCtrl', ['$scope', '$state',
