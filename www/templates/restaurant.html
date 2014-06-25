@@ -16,7 +16,7 @@
         <div class="button-bar">
           <button class="button button-light icon ion-location" open-url="#"> Mapa </button>
           <button class="button button-light icon ion-navigate" open-url="#"> Ruta</button>
-          <button class="button button-light icon ion-ios7-telephone"> Llamar </button>
+          <a class="button button-light icon ion-ios7-telephone" href="tel://{{ rest.getPhone() }}" ng-disabled="!rest.getPhone()"> Llamar </a>
         </div>
       </div>
     </div>

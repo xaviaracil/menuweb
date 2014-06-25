@@ -82,6 +82,13 @@ angular.module('ExternalDataServices')
 			this.set("description", description);
 			return this;
 		},
+		getPhone: function() {
+			return this.get("phone");
+		},
+		setPhone: function(phone) {
+			this.set("phone", phone);
+			return this;
+		},
 		destroyParse:function(){
 			return ParseQueryAngular(this,{functionToCall:'destroy'}); // jshint ignore:line
 		}

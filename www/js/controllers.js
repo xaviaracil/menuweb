@@ -49,8 +49,8 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       ignoreHidden: true,
       minimumClusterSize: 2,
       imageExtension: 'svg',
-      imagePath: 'img/pin',
-      imageSizes: [32]
+      imagePath: 'img/svg/localGroup',
+      imageSizes: [48]
     }
   };
 
@@ -68,17 +68,6 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     });
   }
 
-  _.each($scope.map.markers, function (marker) {
-    marker.closeClick = function () {
-      marker.showWindow = false;
-      $scope.$apply();
-    };
-    marker.onClicked = function () {
-      // marker.showWindow = true;
-      // load translations
-    };
-  });
-
   $scope.updateMarkers = function(someRestaurants) {
     $scope.restaurants = someRestaurants;
     $scope.map.markers = _.map(someRestaurants.models, function(rest) {
@@ -93,10 +82,24 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
           address: rest.getAddress(),
           logoUrl: rest.getLogoFile()
         },
-        icon: "img/pin.svg"
+        icon: "img/svg/pin.svg"
       };
     });
     //$scope.loading.hide();
+    /*
+    _.each($scope.map.markers, function (marker) {
+      marker.closeClick = function () {
+      };
+      marker.onClicked = function () {
+        // marker.showWindow = true;
+        // load translations
+      };
+    });*/
+  };
+
+  $scope.goToRestaurant = function(restaurantId) {
+    console.log('goToRestaurant!!!');
+    $state.go('restaurant', {restaurantId: parameter.id });
   };
 }
 ])
@@ -125,7 +128,8 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     };
 
     $scope.refreshRestaurants = function(position) {
-      $rootScope.currentPosition = position.coords;
+      $rootScope.currentPosition = position;
+      var point = position.coords;
 
       if ($stateParams.categories) {
         var categories = _.map($stateParams.categories.split(','), function(id) {
@@ -133,15 +137,15 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
           category.id = id;
           return category;
         });
-        restaurants.loadRestaurantsWithinGeoBoxAndCategories($rootScope.currentPosition, categories).then($scope.updateList);
+        restaurants.loadRestaurantsWithinGeoBoxAndCategories(point, categories).then($scope.updateList);
       } else if ($stateParams.priceranges) {
         var priceRanges = $stateParams.priceranges.split(',');
-        restaurants.loadRestaurantsWithinGeoBoxAndPriceRanges($rootScope.currentPosition, priceRanges).then($scope.updateList);
+        restaurants.loadRestaurantsWithinGeoBoxAndPriceRanges(point, priceRanges).then($scope.updateList);
       } else if ($stateParams.languages) {
         var languages = $stateParams.languages.split(',');
-        restaurants.loadRestaurantsWithinGeoBoxAndLanguages($rootScope.currentPosition, languages).then($scope.updateList);
+        restaurants.loadRestaurantsWithinGeoBoxAndLanguages(point, languages).then($scope.updateList);
       } else {
-        restaurants.loadRestaurantsWithinGeoBox($rootScope.currentPosition).then($scope.updateList);
+        restaurants.loadRestaurantsWithinGeoBox(point).then($scope.updateList);
       }
     };
 
