@@ -1,0 +1,14 @@
+<ion-view title="{{ currentRestaurant.getName() }}">
+  <ion-content has-header="true" has-subheader card>
+    <ion-list>
+      <a ng-repeat="category in categories"
+                class="item item-divider"
+                ui-sref="restaurant.menu.category({restaurantId: currentRestaurant.id, categoryId: category.id})">
+        <h2>{{ category.name }}</h2>
+      </a>
+    </ion-list>
+  </ion-content>
+  <ion-footer-bar class="bar-positive">
+    <button class="button button-full button-positive" ng-click="goToLanguage()"> Cambiar Idioma</button>
+  </ion-footer-bar>
+</ion-view>

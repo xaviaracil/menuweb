@@ -46,6 +46,15 @@ angular.module('menuweb', ['ionic',
         }
       }
     })
+    .state('restaurant.menu', {
+      url: "/menu",
+      views: {
+        'home@': {
+          templateUrl: 'templates/restaurant-menu.html',
+          controller: 'RestaurantMenuCtrl'
+        }
+      }
+    })
     .state('search', {
       url: "/search",
       views: {

@@ -46,7 +46,7 @@ angular.module('ExternalDataServices')
 			this.query = new Parse.Query(TranslatedCategory);
 			this.query.include('category');
 			this.query.equalTo('translation', translation);
-			//this.query.descending('dish.name');
+			this.query.descending('name');
 			// use the enhanced load() function to fetch the collection
 			return this.load();
 		},

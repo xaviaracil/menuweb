@@ -159,8 +159,8 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 
 }])
 
-.controller('RestaurantCtrl', ['$scope', '$stateParams', '$ionicLoading', 'RestaurantService',
-  function($scope, $stateParams, $ionicLoading, RestaurantService) {
+.controller('RestaurantCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicLoading', 'RestaurantService',
+  function($scope, $rootScope, $state, $stateParams, $ionicLoading, RestaurantService) {
     Parse.Cloud.run('priceranges', null, {
       success: function(foundPriceRanges) {
         $scope.priceranges = _.map(foundPriceRanges, function(priceRange) {
@@ -181,6 +181,55 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     });
 
     // TODO: complete
+    $scope.goToMenu = function(rest) {
+      $rootScope.currentRestaurant = rest;
+      $state.go('restaurant.menu', {currentRestaurantId: rest.id});
+    };
+}])
+
+.controller('RestaurantMenuCtrl', ['$scope', '$state', '$stateParams', '$rootScope', 'RestaurantService', 'TranslationService', 'TranslatedCategoriesService',
+  function($scope, $state, $stateParams, $rootScope, RestaurantService, TranslationService, TranslatedCategoriesService) {
+    if (!$rootScope.currentRestaurant) {
+      var restaurant = new RestaurantService.model();
+      restaurant.id = $stateParams.restaurantId;
+      restaurant.load().then(function(foundRestaurant) {
+        $rootScope.currentRestaurant = foundRestaurant;
+      });
+    }
+
+    $scope.loadCategories = function(language) {
+      var translations = new TranslationService.collection();
+      translations.loadTranslationsOfRestaurantAndLanguage($rootScope.currentRestaurant, language).then(function(foundTranslations) {
+        var translation = _.first(foundTranslations.models);
+        if (translation) {
+          var categories = new TranslatedCategoriesService.collection();
+
+          categories.loadCategoriesOfTranslation(translation).then(function(foundCategories) {
+            $scope.categories = _.map(foundCategories.models, function(category) {
+              return {
+                id: category.id,
+                name: category.getName()
+              };
+            });
+          });
+        } else {
+          // TODO: maybe redirect to a language selector??
+        }
+      });
+    };
+
+    $scope.goToLanguage = function() {
+      $state.go('restaurant.language');
+    };
+
+    // get current language
+    if (navigator.globalization) {
+      navigator.globalization.getPreferredLanguage($scope.loadCategories);
+    } else {
+      var language = navigator.language.split('-')[0];
+      $scope.loadCategories(language);
+    }
+
 }])
 
 .controller('SearchCtrl', ['$scope',
