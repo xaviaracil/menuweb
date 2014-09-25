@@ -48,9 +48,9 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       gridSize: 60,
       ignoreHidden: true,
       minimumClusterSize: 2,
-      imageExtension: 'svg',
-      imagePath: 'img/svg/localGroup',
-      imageSizes: [48]
+      imageExtension: 'png',
+      imagePath: 'img/localGroup',
+      imageSizes: [32]
     }
   };
 
@@ -203,14 +203,16 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       categories.loadCategoriesOfTranslation(translation).then(function(foundCategories) {
         console.log(foundCategories);
         if (!foundCategories.length) {
-          // TODO: redirect to dishes listing
+          // redirect to dishes listing
+          $state.go('restaurant.menu.dishes', {restaurantId: $rootScope.currentRestaurant.id, translationId: translation.id});
         } else {
+          // TODO: set links to dishes by category
           $scope.categories = _.map(foundCategories.models, function(category) {
             return {
               id: category.id,
               name: category.getName()
             };
-          });          
+          });
         }
       });
 
@@ -247,6 +249,45 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       }
     }
 
+}])
+
+.controller('RestaurantMenuDishesCtrl', ['$scope', '$state', '$stateParams', '$rootScope', 'RestaurantService', 'TranslationService', 'TranslatedDishesService',
+  function($scope, $state, $stateParams, $rootScope, RestaurantService, TranslationService, TranslatedDishesService) {
+    if (!$rootScope.currentRestaurant) {
+      var restaurant = new RestaurantService.model();
+      restaurant.id = $stateParams.restaurantId;
+      restaurant.load().then(function(foundRestaurant) {
+        $rootScope.currentRestaurant = foundRestaurant;
+      });
+    }
+
+    $scope.loadDishesOfTranslation = function(translation) {
+      var dishes = new TranslatedDishesService.collection();
+
+      dishes.loadDishesOfTranslation(translation).then(function(foundDishes) {
+        console.log(foundDishes);
+        $scope.dishes = _.map(foundDishes.models, function(dish) {
+          return {
+            id: dish.id,
+            name: dish.getName(),
+            description: dish.getDish().get('description'),
+            price: dish.getDish().get('price')
+          };
+        });
+      });
+    };
+    var translation = new TranslationService.model();
+    translation.id = $stateParams.translationId;
+    if ($stateParams.category) {
+      // TODO: filter dishes by category
+    } else {
+      // load all dishes
+      $scope.loadDishesOfTranslation(translation);
+    }
+
+    $scope.goToLanguage = function() {
+      $state.go('restaurant.language');
+    };
 }])
 
 .controller('SearchCtrl', ['$scope',

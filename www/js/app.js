@@ -55,6 +55,15 @@ angular.module('menuweb', ['ionic',
         }
       }
     })
+    .state('restaurant.menu.dishes', {
+      url: "/menu/translation/:translationId?category",
+      views: {
+        'home@': {
+          templateUrl: 'templates/restaurant-dishes.html',
+          controller: 'RestaurantMenuDishesCtrl'
+        }
+      }
+    })
     .state('restaurant.language', {
       url: "/language",
       views: {

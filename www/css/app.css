@@ -104,7 +104,7 @@ h2.title {
 	max-height: 50px;
 }
 ul.list li {
-	
+
 }
 ul.list li h2 {
 	position: relative;
@@ -175,16 +175,15 @@ ul.list.menu-view .item, ul.list.menu-view .item p {
 	text-overflow: initial;
 	white-space: normal;
 }
-ul.list.menu-view .item p {
+ul.list.menu-view .item p,
+ion-item.item p {
 	max-width: 85%;
 }
-ul.list.menu-view .item span {
+ul.list.menu-view .item span,
+ion-item.item span {
 	position: absolute;
 	right: 15px;
 	top: 15px;
-	color: rgb(149, 147, 147);
-	font-size: 0.8em;
-	color: #0067b4;
 }
 .bar-footer .button.button-full {
 	margin: 0;

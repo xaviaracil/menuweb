@@ -96,7 +96,7 @@ angular.module('ExternalDataServices')
 
 	var Restaurants = Parse.Collection.extendAngular({
 		model: Restaurant,
-		withinKilometers: 5,
+		withinKilometers: 10,
 		comparator: function(model) {
 			return -model.createdAt.getTime();
 		},

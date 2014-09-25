@@ -22,4 +22,10 @@ angular.module('menuweb.filters', [])
   return function(input) {
     return input ? input.getAddress() + ". " + input.getPostalCode() + " " + input.getCity() : '';
   };
+})
+
+.filter('euro', function() {
+  return function(input) {
+    return input ? input + " €" : '0.00 €';
+  };
 });
