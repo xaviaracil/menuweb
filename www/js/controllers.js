@@ -198,6 +198,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     }
 
     $scope.loadCategoriesOfTranslation = function(translation) {
+      $scope.translation = translation;
       var categories = new TranslatedCategoriesService.collection();
 
       categories.loadCategoriesOfTranslation(translation).then(function(foundCategories) {
@@ -206,11 +207,11 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
           // redirect to dishes listing
           $state.go('restaurant.menu.dishes', {restaurantId: $rootScope.currentRestaurant.id, translationId: translation.id});
         } else {
-          // TODO: set links to dishes by category
           $scope.categories = _.map(foundCategories.models, function(category) {
             return {
               id: category.id,
-              name: category.getName()
+              name: category.getName(),
+              categId: category.getCategory().id
             };
           });
         }
@@ -251,8 +252,8 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 
 }])
 
-.controller('RestaurantMenuDishesCtrl', ['$scope', '$state', '$stateParams', '$rootScope', 'RestaurantService', 'TranslationService', 'TranslatedDishesService',
-  function($scope, $state, $stateParams, $rootScope, RestaurantService, TranslationService, TranslatedDishesService) {
+.controller('RestaurantMenuDishesCtrl', ['$scope', '$state', '$stateParams', '$rootScope', 'RestaurantService', 'TranslationService', 'TranslatedDishesService', 'CategoriesService',
+  function($scope, $state, $stateParams, $rootScope, RestaurantService, TranslationService, TranslatedDishesService, CategoriesService) {
     if (!$rootScope.currentRestaurant) {
       var restaurant = new RestaurantService.model();
       restaurant.id = $stateParams.restaurantId;
@@ -261,25 +262,35 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       });
     }
 
-    $scope.loadDishesOfTranslation = function(translation) {
-      var dishes = new TranslatedDishesService.collection();
-
-      dishes.loadDishesOfTranslation(translation).then(function(foundDishes) {
-        console.log(foundDishes);
-        $scope.dishes = _.map(foundDishes.models, function(dish) {
-          return {
-            id: dish.id,
-            name: dish.getName(),
-            description: dish.getDish().get('description'),
-            price: dish.getDish().get('price')
-          };
-        });
+    $scope.updateList = function(foundDishes) {
+      console.log(foundDishes);
+      $scope.dishes = _.map(foundDishes.models, function(dish) {
+        return {
+          id: dish.id,
+          name: dish.getName(),
+          description: dish.getDish().get('description'),
+          price: dish.getDish().get('price')
+        };
       });
     };
+
+    $scope.loadDishesOfTranslationAndCategory = function(translation, category) {
+      var dishes = new TranslatedDishesService.collection();
+      dishes.loadDishesOfTranslationAndCategory(translation, category).then($scope.updateList);
+    };
+
+    $scope.loadDishesOfTranslation = function(translation) {
+      var dishes = new TranslatedDishesService.collection();
+      dishes.loadDishesOfTranslation(translation).then($scope.updateList);
+    };
+
     var translation = new TranslationService.model();
     translation.id = $stateParams.translationId;
     if ($stateParams.category) {
-      // TODO: filter dishes by category
+      // filter dishes by category
+      var category = new CategoriesService.model();
+      category.id = $stateParams.category;
+      $scope.loadDishesOfTranslationAndCategory(translation, category);
     } else {
       // load all dishes
       $scope.loadDishesOfTranslation(translation);

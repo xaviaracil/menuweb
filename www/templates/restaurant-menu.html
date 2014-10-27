@@ -2,8 +2,8 @@
   <ion-content has-header="true" has-subheader card>
     <ion-list>
       <a ng-repeat="category in categories"
-                class="item item-divider"
-                ui-sref="restaurant.menu.category({restaurantId: currentRestaurant.id, categoryId: category.id})">
+                class="item"
+                ui-sref="restaurant.menu.dishes({restaurantId: currentRestaurant.id, translationId: translation.id, category: category.categId})">
         <h2>{{ category.name }}</h2>
       </a>
     </ion-list>

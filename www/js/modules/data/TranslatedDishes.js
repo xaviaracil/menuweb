@@ -39,10 +39,25 @@ angular.module('ExternalDataServices')
 			this.query = new Parse.Query(TranslatedDish);
 			this.query.include('dish');
 			this.query.equalTo('translation', translation);
-			//this.query.descending('dish.name');
+			this.query.descending('name');
 			// use the enhanced load() function to fetch the collection
 			return this.load();
 		},
+		loadDishesOfTranslationAndCategory: function(translation, category) {
+			this.query = new Parse.Query(TranslatedDish);
+			this.query.equalTo('translation', translation);
+
+			// subquery by dish.category
+			// doing this way to avoid circular dependency
+			var Dish = Parse.Object.extend("Dish");
+			var categoryQuery = new Parse.Query(Dish);
+			categoryQuery.equalTo('category', category);
+			this.query.matchesQuery('dish', categoryQuery);
+			this.query.descending('name');
+			// use the enhanced load() function to fetch the collection
+			return this.load();
+		},
+		
 		addDish: function(name, translation) {
 			// save request_id to Parse
 			var _this = this;
