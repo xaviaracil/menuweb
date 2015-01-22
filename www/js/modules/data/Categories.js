@@ -81,13 +81,13 @@ angular.module('menuweb.models.Categories', ['parse-angular.enhance'])
 			this.query = (new Parse.Query(Category));
 			this.query.equalTo('restaurant', restaurant);
 			this.query.ascending('name');
-			return this.fetch();
+			return this.query.find();
 		},
 		loadGeneralCategories: function() {
 			this.query = (new Parse.Query(Category));
 			this.query.equalTo('restaurant', null);
 			this.query.ascending('name');
-			return this.fetch();
+			return this.query.find();
 		},
 		removeCategory:function(category) {
 			if (!this.get(category)) { return false; }

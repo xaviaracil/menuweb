@@ -341,9 +341,8 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
     var categories = new (Parse.Collection.getClass("TranslatedCategory"));
 
     $scope.loadCategories = function(language) {
-      console.log('loading categories of language', language, categories)
       categories.loadGeneralCategoriesOfLanguage(language).then(function(foundCategories) {
-        $scope.categories = _.map(foundCategories.models, function(category) {
+        $scope.categories = _.map(foundCategories, function(category) {
           return {
             id: category.get('category').id,
             name: category.getName(),

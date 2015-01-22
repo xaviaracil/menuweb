@@ -75,7 +75,7 @@ angular.module('menuweb.models.Dishes', ['parse-angular.enhance'])
 			this.query.equalTo('restaurant', restaurant);
 			this.query.ascending('name');
 			this.query.include('category');
-			return this.fetch();
+			return this.query.find();
 		},
 		removeDish:function(dish) {
 			if (!this.get(dish)) { return false; }

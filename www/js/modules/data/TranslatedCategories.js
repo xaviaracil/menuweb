@@ -28,7 +28,7 @@ angular.module('menuweb.models.TranslatedCategory', ['parse-angular.enhance'])
 			return -model.createdAt.getTime();
 		},
 		loadCategoriesOfTranslation: function(translation) {
-			this.query = new Parse.Query(TranslatedCategory);
+			this.query = new Parse.Query(this.model);
 			this.query.include('category');
 			this.query.equalTo('translation', translation);
 			this.query.descending('name');
@@ -36,19 +36,19 @@ angular.module('menuweb.models.TranslatedCategory', ['parse-angular.enhance'])
 			return this.fetch();
 		},
 		loadTranslationsOfCategory: function(category) {
-			this.query = new Parse.Query(TranslatedCategory);
+			this.query = new Parse.Query(this.model);
 			this.query.include('translation');
 			this.query.equalTo('category', category);
 			// use the enhanced load() function to fetch the collection
 			return this.fetch();
 		},
 		loadGeneralCategoriesOfLanguage: function(language) {
-			this.query = new Parse.Query(TranslatedCategory);
+			this.query = new Parse.Query(this.model);
 			this.query.include('category');
 			this.query.equalTo('language', language);
 			this.query.ascending('name'); // TODO: mirar que no ordena
 			// use the enhanced load() function to fetch the collection
-			return this.fetch();
+			return this.query.find();
 		},
 		addCategory: function(name, translation) {
 			// save request_id to Parse
