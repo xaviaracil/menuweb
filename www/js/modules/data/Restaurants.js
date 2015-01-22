@@ -29,7 +29,7 @@ angular.module('menuweb.models.Restaurants', ['parse-angular.enhance'])
 	// --------------------------
 	var Restaurants = Parse.Collection.extend({
 		model: Restaurant,
-		withinKilometers: 20, // TODO change to 5
+		withinKilometers: 5,
 		// We give a className to be able to retrieve the collection
 		// from the getClass helper. See parse-angular-patch git repo
 		className: "Restaurant",
