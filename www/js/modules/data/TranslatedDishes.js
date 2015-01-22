@@ -1,37 +1,29 @@
 /* global Parse */
-// reference the module we declared earlier
-angular.module('ExternalDataServices')
-
-// add a factory
-.factory('TranslatedDishesService', ['ParseQueryAngular', function(ParseQueryAngular) {
+angular.module('menuweb.models.TranslatedDish', ['parse-angular.enhance'])
+.run(function() {
 	'use strict';
-	var TranslatedDish = Parse.Object.extendAngular({
+
+	// --------------------------
+	// TranslatedDish Object Definition
+	// --------------------------
+
+	// Under the hood, everytime you fetch a TranslatedDish object from Parse,
+	// the SDK will natively use this extended class, so you don't have to
+	// worry about objects instantiation if you fetch them from a Parse query for instance
+	var TranslatedDish = Parse.Object.extend({
 		className:'TranslatedDish',
-		setName: function(name) {
-			this.set('name', name);
-			return this;
-		},
-		getName: function() {
-			return this.get('name');
-		},
-		setTranslation: function(translation) {
-			this.set('translation', translation);
-			return this;
-		},
-		setDish: function(dish) {
-			this.set('dish', dish);
-			return this;
-		},
-		getDish: function() {
-			return this.get('dish');
-		},
-		destroyParse:function(){
-			return ParseQueryAngular(this,{functionToCall:'destroy'}); // jshint ignore:line
-		}
+		// Extend the object with getter and setters
+		attrs: ["name", "translation", "dish"]
 	});
 
-	var TranslatedDishes = Parse.Collection.extendAngular({
+	// --------------------------
+	// TranslatedDish Collection Definition
+	// --------------------------
+	var TranslatedDishes = Parse.Collection.extend({
 		model: TranslatedDish,
+		// We give a className to be able to retrieve the collection
+		// from the getClass helper. See parse-angular-patch git repo
+		className: "TranslatedDish",
 		comparator: function(model) {
 			return -model.createdAt.getTime();
 		},
@@ -41,7 +33,7 @@ angular.module('ExternalDataServices')
 			this.query.equalTo('translation', translation);
 			this.query.descending('name');
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		loadDishesOfTranslationAndCategory: function(translation, category) {
 			this.query = new Parse.Query(TranslatedDish);
@@ -55,9 +47,9 @@ angular.module('ExternalDataServices')
 			this.query.matchesQuery('dish', categoryQuery);
 			this.query.descending('name');
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
-		
+
 		addDish: function(name, translation) {
 			// save request_id to Parse
 			var _this = this;
@@ -67,23 +59,16 @@ angular.module('ExternalDataServices')
 			translatedDish.setTranslation(translation);
 
 			// use the extended Parse SDK to perform a save and return the promised object back into the Angular world
-			return translatedDish.saveParse().then(function(data){
+			return translatedDish.save().then(function(data){
 				_this.add(data);
 			});
 		},
 		removeDish:function(translatedDish) {
 			if (!this.get(translatedDish)) { return false; }
 			var _this = this;
-			return translatedDish.destroyParse().then(function(){
+			return translatedDish.destroy().then(function(){
 				_this.remove(translatedDish);
 			});
 		}
 	});
-
-	// Return a simple API : model or collection.
-	return {
-		model: TranslatedDish,
-		collection: TranslatedDishes
-	};
-
-}]);
+});

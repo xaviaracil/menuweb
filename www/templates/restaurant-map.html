@@ -1,29 +1,29 @@
-<ion-view title="Menu-Web">
-  <ion-nav-buttons side="left">
+<ion-view view-title="Menu-Web">
+  <ion-nav-buttons side="primary">
     <button class="button button-clear" ui-sref="search">
       <i class="icon ion-ios7-search-strong"></i>
     </button>
   </ion-nav-buttons>
 
-  <ion-nav-buttons side="right">
+  <ion-nav-buttons side="secondary">
     <button class="button button-icon" ui-sref="restaurants">
       <i class="icon ion-navicon"></i>
     </button>
   </ion-nav-buttons>
 
   <ion-content scroll="false" data-tap-disabled="true">
-    <google-map center='map.center' zoom='map.zoom' draggable="true" options='{streetViewControl:false}' pan="true" ngCloak>
-      <markers models="map.markers" coords="'self'" click="'onClicked'" icon="'icon'"
+    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true" options='{streetViewControl:false}' pan="true" ngCloak>
+      <ui-gmap-markers models="map.markers" coords="'location'" doRebuildAll="map.doRebuildAll" click="'onClick'" icon="'icon'"
       doCluster="map.doCluster" clusterOptions="map.clusterOptions">
-        <windows show="'showWindow'" coords="'self'" templateParameter="'templateParameter'" templateUrl="'templateUrl'" options="{boxClass:'infowindow', pixelOffset: {height: -100, width: -32}, closeBoxURL:''}" ngCloak>
+        <ui-gmap-windows coords="'location'" show="'show'" templateParameter="'templateParameter'" templateUrl="'templateUrl'" options="'options'" ngCloak>
           <!--
         -->
-        </windows>
-      </markers>
-    </google-map>
+        </ui-gmap-windows>
+      </ui-gmap-markers>
+    </ui-gmap-google-map>
     <ion-footer-bar class="bar-positive">
       <div class="bar bar-footer bar-positive">
-          <button class="button button-full button-positive icon ion-camera"> QR Scan</button>
+          <button class="button button-full button-positive icon ion-camera" ng-click="scan()"> QR Scan</button>
       </div>
     </ion-footer-bar>
 

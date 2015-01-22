@@ -1,48 +1,56 @@
 angular.module('menuweb.controllers', [])
 
-.controller('RestaurantMapCtrl', ['$scope', '$rootScope', '$state', '$ionicLoading', 'RestaurantService',
-function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
-  /*
-  var loadingOptions = {
-    // The text to display in the loading indicator
-    content: 'Loading',
-
-    // The animation to use
-    animation: 'fade-in',
-
-    // Will a dark overlay or backdrop cover the entire view
-    showBackdrop: true,
-
-    // The maximum width of the loading indicator
-    // Text will be wrapped if longer than maxWidth
-    maxWidth: 200,
-
-    // The delay in showing the indicator
-    showDelay: 500
-  };
-
+.controller('RestaurantMapCtrl',
+function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarcodeScanner, uiGmapGoogleMapApi) {
   // Show the loading overlay and text
-  $ionicLoading.show(loadingOptions);
-*/
+  $ionicLoading.show({
+    // The text to display in the loading indicator
+    template: 'Loading',
+    hideOnStateChange: true,
+  });
+
   // get the collection from our data definitions
-  var restaurants = new RestaurantService.collection();
+  var restaurants = new (Parse.Collection.getClass("Restaurant"));
   var initialMarkers = [];
 
-  // use the extended Parse SDK to load the whole collection
-  restaurants.load().then(function(foundRestaurants) {
-    $scope.updateMarkers(foundRestaurants);
-    initialMarkers = $scope.map.markers;
+  $scope.goToRestaurant = function(restaurantId) {
+    $state.go('restaurant', {restaurantId: parameter.id });
+  };
+
+  // setup barcode scanner
+  $ionicPlatform.ready(function() {
+    $scope.scan = function() {
+      $cordovaBarcodeScanner
+      .then(function(barcodeData) {
+        // Success! Barcode data is here
+        // Go to barcodeData
+        if (barcodeData.type === BarcodeScanner.Encode.QR_TYPE) {
+          $state.go(barcodeData.text);
+        } else {
+          // TODO: display an error?
+          $scope.scan();
+        }
+      }, function(error) {
+        // An error occurred
+      });
+    };
   });
+
+  var createPoint = function(location) {
+    var coordinates = (location ? [location.longitude, location.latitude] : [0,0]);
+    return {
+      "type": "Point",
+      coordinates: coordinates
+    }
+  };
 
   // initial map
   $scope.map = {
-    center: {
-      latitude: 41,
-      longitude: 2
-    },
+    center: createPoint({longitude: 2, latitude: 41}),
     zoom: 8,
     markers: initialMarkers,
     doCluster: true,
+    doRebuildAll: true,
     clusterOptions: {
       title: 'More restaurants here',
       gridSize: 60,
@@ -53,60 +61,69 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       imageSizes: [32]
     }
   };
+    // load restaurants with geolocation
+  uiGmapGoogleMapApi.then(function(maps) {
+    var loadAllRestaurants = function() {
+      // load the whole collection
+      restaurants.fetch().then(function(foundRestaurants) {
+        updateMarkers(foundRestaurants);
+      });
+    };
 
-  // HTML5 geolocation
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      $rootScope.currentPosition = position;
-      $scope.map.center = position.coords;
-      $scope.map.zoom = 15;
-
-      // reload restaurants from location
-      //$ionicLoading.show(loadingOptions);
-      restaurants.loadRestaurantsWithinGeoBox(position.coords).then($scope.updateMarkers);
-      $scope.$apply();
-    });
-  }
-
-  $scope.updateMarkers = function(someRestaurants) {
-    $scope.restaurants = someRestaurants;
-    $scope.map.markers = _.map(someRestaurants.models, function(rest) {
-      return {
-        latitude: rest.getLocation() ? rest.getLocation().latitude : 0.0,
-        longitude: rest.getLocation() ? rest.getLocation().longitude: 0.0,
-        id: rest.id,
-        templateUrl: 'templates/info-window.html',
-        templateParameter: {
+    var updateMarkers = function(someRestaurants) {
+      $scope.restaurants = someRestaurants;
+      var newMarkers = _.map(someRestaurants.models, function(rest) {
+        var marker = {
+          location: createPoint(rest.getLocation()),
           id: rest.id,
-          title: rest.getName(),
-          address: rest.getAddress(),
-          logoUrl: rest.getLogoFile()
-        },
-        icon: "img/svg/pin.svg"
-      };
-    });
-    //$scope.loading.hide();
-    /*
-    _.each($scope.map.markers, function (marker) {
-      marker.closeClick = function () {
-      };
-      marker.onClicked = function () {
-        // marker.showWindow = true;
-        // load translations
-      };
-    });*/
-  };
+          templateUrl: 'templates/info-window.html',
+          templateParameter: {
+            id: rest.id,
+            title: rest.getName(),
+            address: rest.getAddress(),
+            logoUrl: rest.getLogoFile()
+          },
+          //icon: {url: "img/svg/pin.svg", size: new google.maps.Size(32, 51)},
+          icon: "img/svg/pin.svg",
+          show: false,
+          options: {
+            boxClass:'infowindow',
+            pixelOffset: {
+              height: -80,
+              width: -32
+            },
+            closeBoxURL:''
+          }
+        };
+        marker.onClick = function() {
+          marker.show = !marker.show;
+        };
+        return marker;
+      });
+      $scope.map.markers = newMarkers;
+      $ionicLoading.hide();
+    };
 
-  $scope.goToRestaurant = function(restaurantId) {
-    console.log('goToRestaurant!!!');
-    $state.go('restaurant', {restaurantId: parameter.id });
-  };
-}
-])
+    // HTML5 geolocation
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        $rootScope.currentPosition = position;
+        $scope.map.zoom = 12;
+        $scope.map.center = createPoint(position.coords);
 
-.controller('RestaurantListCtrl', ['$scope', '$rootScope', '$stateParams', '$ionicNavBarDelegate', 'RestaurantService', 'CategoriesService',
-  function($scope, $rootScope, $stateParams, $ionicNavBarDelegate, RestaurantService, CategoriesService) {
-    var restaurants = new RestaurantService.collection();
+        // reload restaurants from location
+        //$ionicLoading.show(loadingOptions);
+        restaurants.loadRestaurantsWithinGeoBox(position.coords).then(updateMarkers);
+      }, loadAllRestaurants);
+    } else {
+      loadAllRestaurants();
+    }
+  });
+})
+
+.controller('RestaurantListCtrl',
+  function($scope, $rootScope, $stateParams, $ionicNavBarDelegate) {
+    var restaurants = new (Parse.Collection.getClass("Restaurant"));
 
     Parse.Cloud.run('priceranges', null, {
       success: function(priceranges) {
@@ -133,7 +150,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 
       if ($stateParams.categories) {
         var categories = _.map($stateParams.categories.split(','), function(id) {
-          var category = new CategoriesService.model();
+          var category = new (Parse.Object.getClass("Category"));
           category.id = id;
           return category;
         });
@@ -157,10 +174,10 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       // TODO: error message? Alphabetical list?
     }
 
-}])
+})
 
-.controller('RestaurantCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicLoading', 'RestaurantService',
-  function($scope, $rootScope, $state, $stateParams, $ionicLoading, RestaurantService) {
+.controller('RestaurantCtrl',
+  function($scope, $rootScope, $state, $stateParams, $ionicLoading) {
     Parse.Cloud.run('priceranges', null, {
       success: function(foundPriceRanges) {
         $scope.priceranges = _.map(foundPriceRanges, function(priceRange) {
@@ -174,9 +191,9 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       }
     });
 
-    var restaurant = new RestaurantService.model();
+    var restaurant = new (Parse.Object.getClass("Restaurant"));
     restaurant.id = $stateParams.restaurantId;
-    restaurant.load().then(function(foundRestaurant) {
+    restaurant.fetch().then(function(foundRestaurant) {
       $scope.rest = foundRestaurant;
     });
 
@@ -185,12 +202,12 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       $rootScope.currentRestaurant = rest;
       $state.go('restaurant.menu', {currentRestaurantId: rest.id});
     };
-}])
+})
 
-.controller('RestaurantMenuCtrl', ['$scope', '$state', '$stateParams', '$rootScope', 'RestaurantService', 'TranslationService', 'TranslatedCategoriesService',
-  function($scope, $state, $stateParams, $rootScope, RestaurantService, TranslationService, TranslatedCategoriesService) {
+.controller('RestaurantMenuCtrl',
+  function($scope, $state, $stateParams, $rootScope, $ionicHistory) {
     if (!$rootScope.currentRestaurant) {
-      var restaurant = new RestaurantService.model();
+      var restaurant = new (Parse.Object.getClass("Restaurant"));
       restaurant.id = $stateParams.restaurantId;
       restaurant.load().then(function(foundRestaurant) {
         $rootScope.currentRestaurant = foundRestaurant;
@@ -199,12 +216,20 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 
     $scope.loadCategoriesOfTranslation = function(translation) {
       $scope.translation = translation;
-      var categories = new TranslatedCategoriesService.collection();
+      var categories = new (Parse.Collection.getClass("TranslatedCategory"));
 
       categories.loadCategoriesOfTranslation(translation).then(function(foundCategories) {
-        console.log(foundCategories);
         if (!foundCategories.length) {
-          // redirect to dishes listing
+          // redirect to dishes listing, only if not going back
+          console.log("No categories found", $ionicHistory.viewHistory(), $rootScope.lastState);
+          $ionicHistory.nextViewOptions({
+            disableAnimate: true
+          });
+          if ($rootScope.lastState.state.name === 'restaurant.menu.dishes') {
+            $ionicHistory.goBack();
+            return;
+          }
+
           $state.go('restaurant.menu.dishes', {restaurantId: $rootScope.currentRestaurant.id, translationId: translation.id});
         } else {
           $scope.categories = _.map(foundCategories.models, function(category) {
@@ -219,13 +244,21 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 
     };
     $scope.loadCategories = function(language) {
-      var translations = new TranslationService.collection();
+      var translations = new (Parse.Collection.getClass("Translation"));
       translations.loadTranslationsOfRestaurantAndLanguage($rootScope.currentRestaurant, language).then(function(foundTranslations) {
         var translation = _.first(foundTranslations.models);
         if (translation) {
           $scope.loadCategoriesOfTranslation(translation);
         } else {
           // redirect to a language selector??
+          console.log("Language not found", $rootScope.lastState, $ionicHistory.viewHistory());
+          $ionicHistory.nextViewOptions({
+            disableAnimate: true
+          });
+          if ($rootScope.lastState.state.name === 'restaurant.language') {
+            $ionicHistory.goBack();
+            return;
+          }
           $scope.goToLanguage();
         }
       });
@@ -237,7 +270,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
 
     if ($stateParams.translation) {
       // already a translation defined
-      var translation = new TranslationService.model();
+      var translation = new (Parse.Object.getClass("Translation"));
       translation.id = $stateParams.translation;
       $scope.loadCategoriesOfTranslation(translation);
     } else {
@@ -250,20 +283,19 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       }
     }
 
-}])
+})
 
-.controller('RestaurantMenuDishesCtrl', ['$scope', '$state', '$stateParams', '$rootScope', 'RestaurantService', 'TranslationService', 'TranslatedDishesService', 'CategoriesService',
-  function($scope, $state, $stateParams, $rootScope, RestaurantService, TranslationService, TranslatedDishesService, CategoriesService) {
+.controller('RestaurantMenuDishesCtrl',
+  function($scope, $state, $stateParams, $rootScope) {
     if (!$rootScope.currentRestaurant) {
-      var restaurant = new RestaurantService.model();
+      var restaurant = new (Parse.Object.getClass("Restaurant"));
       restaurant.id = $stateParams.restaurantId;
-      restaurant.load().then(function(foundRestaurant) {
+      restaurant.fetch().then(function(foundRestaurant) {
         $rootScope.currentRestaurant = foundRestaurant;
       });
     }
 
     $scope.updateList = function(foundDishes) {
-      console.log(foundDishes);
       $scope.dishes = _.map(foundDishes.models, function(dish) {
         return {
           id: dish.id,
@@ -275,20 +307,20 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     };
 
     $scope.loadDishesOfTranslationAndCategory = function(translation, category) {
-      var dishes = new TranslatedDishesService.collection();
+      var dishes = new (Parse.Collection.getClass("TranslatedDish"));
       dishes.loadDishesOfTranslationAndCategory(translation, category).then($scope.updateList);
     };
 
     $scope.loadDishesOfTranslation = function(translation) {
-      var dishes = new TranslatedDishesService.collection();
+      var dishes = new (Parse.Collection.getClass("TranslatedDish"));
       dishes.loadDishesOfTranslation(translation).then($scope.updateList);
     };
 
-    var translation = new TranslationService.model();
+    var translation = new (Parse.Object.getClass("Translation"));
     translation.id = $stateParams.translationId;
     if ($stateParams.category) {
       // filter dishes by category
-      var category = new CategoriesService.model();
+      var category = new (Parse.Object.getClass("Category"));
       category.id = $stateParams.category;
       $scope.loadDishesOfTranslationAndCategory(translation, category);
     } else {
@@ -299,17 +331,17 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     $scope.goToLanguage = function() {
       $state.go('restaurant.language');
     };
-}])
+})
 
-.controller('SearchCtrl', ['$scope',
-  function($scope) {
-}])
+.controller('SearchCtrl', function() {
+})
 
-.controller('SearchCategoryCtrl', ['$scope', '$state', 'TranslatedCategoriesService',
-  function($scope, $state, TranslatedCategoriesService) {
-    var categories = new TranslatedCategoriesService.collection();
+.controller('SearchCategoryCtrl',
+  function($scope, $state) {
+    var categories = new (Parse.Collection.getClass("TranslatedCategory"));
 
     $scope.loadCategories = function(language) {
+      console.log('loading categories of language', language, categories)
       categories.loadGeneralCategoriesOfLanguage(language).then(function(foundCategories) {
         $scope.categories = _.map(foundCategories.models, function(category) {
           return {
@@ -338,10 +370,10 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       //  search
       $state.go('restaurants', {categories: selectedCategories});
     };
-}])
+})
 
-.controller('RestaurantLanguageCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'RestaurantService', 'TranslationService',
-  function($scope, $rootScope, $state, $stateParams, RestaurantService, TranslationService) {
+.controller('RestaurantLanguageCtrl',
+  function($scope, $rootScope, $state, $stateParams) {
     Parse.Cloud.run('languages', null, {
       success: function(foundLanguages) {
         $scope.languages = _.map(foundLanguages, function(language) {
@@ -356,7 +388,7 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     });
     $scope.loadTranslations = function() {
       // load translations of restaurant
-      var translations = new TranslationService.collection();
+      var translations = new (Parse.Collection.getClass("Translation"));
       translations.loadTranslationsOfRestaurant($rootScope.currentRestaurant).then(function(foundTranslations) {
         $scope.translations = _.map(foundTranslations.models, function(translation) {
           return  {
@@ -368,18 +400,18 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
     };
 
     if (!$rootScope.currentRestaurant) {
-      var restaurant = new RestaurantService.model();
+      var restaurant = new (Parse.Object.getClass("Restaurant"));
       restaurant.id = $stateParams.restaurantId;
-      restaurant.load().then(function(foundRestaurant) {
+      restaurant.fetch().then(function(foundRestaurant) {
         $rootScope.currentRestaurant = foundRestaurant;
         $scope.loadTranslations();
       });
     } else {
       $scope.loadTranslations();
     }
-}])
+})
 
-.controller('SearchPriceCtrl', ['$scope', '$state',
+.controller('SearchPriceCtrl',
   function($scope, $state) {
     Parse.Cloud.run('priceranges', null, {
       success: function(foundPriceRanges) {
@@ -402,9 +434,9 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       // search
       $state.go('restaurants', {priceranges: selectedPriceRanges});
     };
-}])
+})
 
-.controller('SearchLanguageCtrl', ['$scope', '$state',
+.controller('SearchLanguageCtrl',
   function($scope, $state) {
     Parse.Cloud.run('languages', null, {
       success: function(foundLanguages) {
@@ -427,4 +459,4 @@ function($scope, $rootScope, $state, $ionicLoading, RestaurantService) {
       // search
       $state.go('restaurants', {languages: selectedLanguages});
     };
-}]);
+});

@@ -1,33 +1,30 @@
 /* global Parse,_,$ */
-// reference the module we declared earlier
-angular.module('ExternalDataServices')
-
-// add a factory
-.factory('CategoriesService', ['ParseQueryAngular', 'TranslatedCategoriesService', function(ParseQueryAngular, TranslatedCategoriesService) {
+angular.module('menuweb.models.Categories', ['parse-angular.enhance'])
+.run(function() {
 	'use strict';
-	var Category = Parse.Object.extendAngular({
+
+	// --------------------------
+	// Category Object Definition
+	// --------------------------
+
+	// Under the hood, everytime you fetch a Category object from Parse,
+	// the SDK will natively use this extended class, so you don't have to
+	// worry about objects instantiation if you fetch them from a Parse query for instance
+	var Category = Parse.Object.extend({
 		className:'Category',
-		setName: function(name) {
-			this.set('name', name);
-			return this;
-		},
-		getName: function() {
-			return this.get('name');
-		},
-		setRestaurant: function(restaurant) {
-			this.set('restaurant', restaurant);
-			return this;
-		},
-		getRestaurant: function() {
-			return this.get('restaurant');
-		},
-		destroyParse:function(){
-			return ParseQueryAngular(this,{functionToCall:'destroy'}); // jshint ignore:line
-		}
+		// Extend the object with getter and setters
+		attrs: ["name", "restaurant"]
 	});
 
-	var Categories = Parse.Collection.extendAngular({
+
+	// --------------------------
+	// Category Collection Definition
+	// --------------------------
+	var Categories = Parse.Collection.extend({
 		model: Category,
+		// We give a className to be able to retrieve the collection
+		// from the getClass helper. See parse-angular-patch git repo
+		className: "Category",
 		comparator: function(model) {
 			return -model.createdAt.getTime();
 		},
@@ -41,7 +38,7 @@ angular.module('ExternalDataServices')
 
 			// use the extended Parse SDK to perform a save and return the promised object back into the Angular world
 			$rootScope.progessAction = 'Creating category ' + name;
-			return category.saveParse().then(function(data){
+			return category.save().then(function(data){
 				// create translated dish for translation
 				_.each(translations.models, function(translation) {
 					$rootScope.progress = (++currentStep * 100) / steps;
@@ -51,7 +48,7 @@ angular.module('ExternalDataServices')
 					translatedCategory.setName(category.getName());
 					translatedCategory.setTranslation(translation);
 					translatedCategory.setCategory(data);
-					translatedCategory.saveParse().then(function() {
+					translatedCategory.save().then(function() {
 						if(currentStep === steps) {
 							$rootScope.progress = 100;
 							$rootScope.progessAction = 'Created!';
@@ -65,7 +62,7 @@ angular.module('ExternalDataServices')
 					// update translation
 					if (translation.getLanguage() !== restaurant.getInitialLanguage()) {
 						translation.setCompleted(false);
-						translation.saveParse();
+						translation.save();
 					}
 				});
 				_this.add(data);
@@ -76,7 +73,7 @@ angular.module('ExternalDataServices')
 			var _this = this;
 			var category = new Category();
 			category.setName(name);
-			return category.saveParse().then(function(data){
+			return category.save().then(function(data){
 				_this.add(data);
 			});
 		},
@@ -84,29 +81,20 @@ angular.module('ExternalDataServices')
 			this.query = (new Parse.Query(Category));
 			this.query.equalTo('restaurant', restaurant);
 			this.query.ascending('name');
-			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		loadGeneralCategories: function() {
 			this.query = (new Parse.Query(Category));
 			this.query.equalTo('restaurant', null);
 			this.query.ascending('name');
-			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		removeCategory:function(category) {
 			if (!this.get(category)) { return false; }
 			var _this = this;
-			return category.destroyParse().then(function(){
+			return category.destroy().then(function(){
 				_this.remove(category);
 			});
 		}
 	});
-
-	// Return a simple API : model or collection.
-	return {
-		model: Category,
-		collection: Categories
-	};
-
-}]);
+});

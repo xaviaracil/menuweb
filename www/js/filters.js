@@ -26,6 +26,6 @@ angular.module('menuweb.filters', [])
 
 .filter('euro', function() {
   return function(input) {
-    return input ? input + " €" : '0.00 €';
+    return input ? input + " €" : 'N/A';
   };
 });

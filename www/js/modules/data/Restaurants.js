@@ -1,72 +1,19 @@
 /* global Parse */
-// reference the module we declared earlier
-angular.module('ExternalDataServices')
-
-// add a factory
-.factory('RestaurantService', ['ParseQueryAngular', function(ParseQueryAngular) {
+angular.module('menuweb.models.Restaurants', ['parse-angular.enhance'])
+.run(function() {
 	'use strict';
-	var Restaurant = Parse.Object.extendAngular({
+
+	// --------------------------
+	// Restaurant Object Definition
+	// --------------------------
+
+	// Under the hood, everytime you fetch a Restaurant object from Parse,
+	// the SDK will natively use this extended class, so you don't have to
+	// worry about objects instantiation if you fetch them from a Parse query for instance
+	var Restaurant = Parse.Object.extend({
 		className:'Restaurant',
-		setName: function(name) {
-			this.set('name',name);
-			return this;
-		},
-		getName: function() {
-			return this.get('name');
-		},
-		getNormalizedName: function() {
-			return this.get('normalizedName');
-		},
-		setLocation: function(location) {
-			this.set('location', location);
-		},
-		getLocation: function() {
-			return this.get('location');
-		},
-		setAddress: function(address) {
-			this.set('address', address);
-		},
-		getAddress: function() {
-			return this.get('address');
-		},
-		setPostalCode: function(postalCode) {
-			this.set('postalCode', postalCode);
-		},
-		getPostalCode: function() {
-			return this.get('postalCode');
-		},
-		setCity: function(city) {
-			this.set('city', city);
-		},
-		getCity: function() {
-			return this.get('city');
-		},
-		setState: function(state) {
-			this.set('state', state);
-		},
-		getState: function() {
-			return this.get('state');
-		},
-		setInitialLanguage: function(initialLanguage) {
-			this.set('initialLanguage', initialLanguage);
-			return this;
-		},
-		getInitialLanguage: function() {
-			return this.get('initialLanguage');
-		},
-		getTranslationNumber: function() {
-			return this.get('translationNumber');
-		},
-		getTranslated: function() {
-			return this.get('translated');
-		},
-		setPriceRange: function(pricerange) {
-			this.set('priceRange', pricerange);
-			return this;
-		},
-		getPriceRange: function() {
-			return this.get('priceRange');
-		},
+		// Extend the object with getter and setters
+		attrs: ["name", "normalizedName", "location", "address", "postalCode", "city", "state", "initialLanguage", "translationNumber", "translated", "priceRange", "description", "phone"],
 		setLogoFile: function(logoFile) {
 			this.set("logoFile", logoFile);
 			return this;
@@ -74,29 +21,18 @@ angular.module('ExternalDataServices')
 		getLogoFile: function() {
 			var logoFile = this.get("logoFile");
 			return logoFile ? logoFile.url() : "img/imagotipo.svg";
-		},
-		getDescription: function() {
-			return this.get("description");
-		},
-		setDescription: function(description) {
-			this.set("description", description);
-			return this;
-		},
-		getPhone: function() {
-			return this.get("phone");
-		},
-		setPhone: function(phone) {
-			this.set("phone", phone);
-			return this;
-		},
-		destroyParse:function(){
-			return ParseQueryAngular(this,{functionToCall:'destroy'}); // jshint ignore:line
 		}
 	});
 
-	var Restaurants = Parse.Collection.extendAngular({
+	// --------------------------
+	// Restaurant Collection Definition
+	// --------------------------
+	var Restaurants = Parse.Collection.extend({
 		model: Restaurant,
-		withinKilometers: 30,
+		withinKilometers: 20, // TODO change to 5
+		// We give a className to be able to retrieve the collection
+		// from the getClass helper. See parse-angular-patch git repo
+		className: "Restaurant",
 		comparator: function(model) {
 			return -model.createdAt.getTime();
 		},
@@ -104,26 +40,25 @@ angular.module('ExternalDataServices')
 			this.query = new Parse.Query(Restaurant);
 			this.query.contains('normalizedName', name.toLowerCase());
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		loadPendingRestaurants: function() {
 			this.query = new Parse.Query(Restaurant);
 			this.query.equalTo('translated', false);
 			this.query.descending('name');
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		loadRestaurantsOrderedByName: function() {
 			this.query = (new Parse.Query(Restaurant));
 			this.query.descending('name');
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		loadRestaurantsWithinGeoBox: function(point) {
 			this.query = (new Parse.Query(Restaurant));
 			this.query.withinKilometers('location', point, this.withinKilometers);
-
-			return this.load();
+			return this.fetch();
 		},
 		loadRestaurantsWithinGeoBoxAndCategories: function(point, categories) {
 			if (!categories || !_.size(categories)) {
@@ -151,7 +86,7 @@ angular.module('ExternalDataServices')
 			}
 
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		loadRestaurantsWithinGeoBoxAndPriceRanges: function(point, priceRanges) {
 			if (!priceRanges || !_.size(priceRanges)) {
@@ -179,7 +114,7 @@ angular.module('ExternalDataServices')
 			}
 
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 
 		loadRestaurantsWithinGeoBoxAndLanguages: function(point, languages) {
@@ -208,7 +143,7 @@ angular.module('ExternalDataServices')
 			}
 
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		addRestaurant: function(name, initialLanguage) {
 			// save request_id to Parse
@@ -218,24 +153,17 @@ angular.module('ExternalDataServices')
 			restaurant.setName(name);
 			restaurant.setInitialLanguage(initialLanguage);
 
-			// use the extended Parse SDK to perform a save and return the promised object back into the Angular world
-			return restaurant.saveParse().then(function(data){
+			// use the extended  SDK to perform a save and return the promised object back into the Angular world
+			return restaurant.save().then(function(data){
 				_this.add(data);
 			});
 		},
 		removeRestaurant:function(restaurant) {
 			if (!this.get(restaurant)) { return false; }
 			var _this = this;
-			return restaurant.destroyParse().then(function(){
+			return restaurant.destroy().then(function(){
 				_this.remove(restaurant);
 			});
 		}
 	});
-
-	// Return a simple API : model or collection.
-	return {
-		model: Restaurant,
-		collection: Restaurants
-	};
-
-}]);
+});

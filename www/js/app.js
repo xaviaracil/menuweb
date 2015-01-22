@@ -3,15 +3,33 @@
 // 'menuweb.controllers' is found in controllers.js
 // 'menuweb.filters' is found in filters.js
 angular.module('menuweb', ['ionic',
+  'uiGmapgoogle-maps',
+  'ngCordova',
+  'parse-angular',
+  'parse-angular.enhance',
   'menuweb.controllers',
   'menuweb.filters',
-  'ParseServices',
-  'ExternalDataServices',
-  'google-maps',
-  'ngCordova'
+  'menuweb.models.Categories',
+  'menuweb.models.Dishes',
+  'menuweb.models.Restaurants',
+  'menuweb.models.TranslatedCategory',
+  'menuweb.models.TranslatedDish',
+  'menuweb.models.Translations'
 ])
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, $ionicConfigProvider) {
+
+  // Parse init
+  // pro-tip: swap these keys out for PROD keys automatically on deploy using grunt-replace
+  Parse.initialize("0l9HVP7fBLbbV1Qlp1SHHAoOVYC93Boo51SbI1tf", "dOD99fLcB07AwOTmrFgZZRQvi4HfPLpJyQV6sbr9");
+
+  // Load Google Maps
+  uiGmapGoogleMapApiProvider.configure({
+    key: 'AIzaSyAKIhcVJSlb5vEiXYQxhDnPbS6rnRmPJVY'
+  });
+
+  // Disable caching
+  $ionicConfigProvider.views.maxCache(0);
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -114,8 +132,12 @@ angular.module('menuweb', ['ionic',
   $urlRouterProvider.otherwise('/');
 })
 
-.run(['ParseSDK', 'ExtendParseSDK', '$rootScope', '$state', '$stateParams',
- function(ParseService, ExtendParseSDK, $rootScope, $state, $stateParams) {
+.run(['$rootScope', '$state', '$stateParams',
+ function($rootScope, $state, $stateParams) {
    $rootScope.$state = $state;
    $rootScope.$stateParams = $stateParams;
+
+   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams, error){
+     $rootScope.lastState = { state: fromState, params: fromParams }
+   });   
 }]);

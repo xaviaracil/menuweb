@@ -1,39 +1,29 @@
 /* global Parse,_,$ */
-// reference the module we declared earlier
-angular.module('ExternalDataServices')
-
-// add a factory
-.factory('TranslationService', ['ParseQueryAngular', 'TranslatedDishesService', function(ParseQueryAngular, TranslatedDishesService) {
+angular.module('menuweb.models.Translations', ['parse-angular.enhance'])
+.run(function() {
 	'use strict';
-	var Translation = Parse.Object.extendAngular({
+
+	// --------------------------
+	// Translation Object Definition
+	// --------------------------
+
+	// Under the hood, everytime you fetch a Translation object from Parse,
+	// the SDK will natively use this extended class, so you don't have to
+	// worry about objects instantiation if you fetch them from a Parse query for instance
+	var Translation = Parse.Object.extend({
 		className:'Translation',
-		setLanguage: function(language) {
-			this.set('language',language);
-			return this;
-		},
-		getLanguage: function() {
-			return this.get('language');
-		},
-		setRestaurant: function(restaurant) {
-			this.set('restaurant', restaurant);
-			return this;
-		},
-		getRestaurant: function() {
-			return this.get('restaurant');
-		},
-		setCompleted: function(completed) {
-			this.set('completed', completed);
-		},
-		getCompleted: function() {
-			return this.get('completed');
-		},
-		destroyParse:function(){
-			return ParseQueryAngular(this,{functionToCall:'destroy'}); // jshint ignore:line
-		}
+		// Extend the object with getter and setters
+		attrs: ["language", "restaurant", "completed"]
 	});
 
-	var Translations = Parse.Collection.extendAngular({
+	// --------------------------
+	// Translations Collection Definition
+	// --------------------------
+	var Translations = Parse.Collection.extend({
 		model: Translation,
+		// We give a className to be able to retrieve the collection
+		// from the getClass helper. See parse-angular-patch git repo
+		className: "Translation",
 		comparator: function(model) {
 			return -model.createdAt.getTime();
 		},
@@ -42,20 +32,20 @@ angular.module('ExternalDataServices')
 			this.query.descending('name');
 			this.query.include('restaurant');
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		loadTranslationsOfRestaurant: function(restaurant) {
 			this.query = new Parse.Query(Translation);
 			this.query.equalTo('restaurant', restaurant);
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		loadTranslationsOfRestaurantAndLanguage: function(restaurant, language) {
 			this.query = new Parse.Query(Translation);
 			this.query.equalTo('restaurant', restaurant);
 			this.query.equalTo('language', language);
 			// use the enhanced load() function to fetch the collection
-			return this.load();
+			return this.fetch();
 		},
 		addTranslation: function(language, restaurant, dishes, $rootScope, modal, currentStep, steps) {
 			// save request_id to Parse
@@ -68,7 +58,7 @@ angular.module('ExternalDataServices')
 
 			$rootScope.progessAction = 'Creating translation for ' + language;
 			// use the extended Parse SDK to perform a save and return the promised object back into the Angular world
-			return translation.saveParse().then(function(data){
+			return translation.save().then(function(data){
 				// create translated dish for each dish
 				_.each(dishes.models, function(dish) {
 					$rootScope.progress = (++currentStep * 100) / steps;
@@ -78,7 +68,7 @@ angular.module('ExternalDataServices')
 					translatedDish.setName(dish.getName());
 					translatedDish.setTranslation(data);
 					translatedDish.setDish(dish);
-					translatedDish.saveParse().then(function() {
+					translatedDish.save().then(function() {
 						if(currentStep === steps) {
 							$rootScope.progress = 100;
 							$rootScope.progessAction = 'Created!';
@@ -93,24 +83,17 @@ angular.module('ExternalDataServices')
 			}, function(error) {
 				$rootScope.progessAction = error.message;
 				$rootScope.currentError = error.message;
-    			if (modal) {
-                    $(modal).modal('hide');
-    			}
+				if (modal) {
+					$(modal).modal('hide');
+				}
 			});
 		},
 		removeTranslation:function(translation) {
 			if (!this.get(translation)) { return false; }
 			var _this = this;
-			return translation.destroyParse().then(function(){
+			return translation.destroy().then(function(){
 				_this.remove(translation);
 			});
 		}
 	});
-
-	// Return a simple API : model or collection.
-	return {
-		model: Translation,
-		collection: Translations
-	};
-
-}]);
+});
