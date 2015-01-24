@@ -1,13 +1,13 @@
 angular.module('menuweb.controllers', [])
 
 .controller('RestaurantMapCtrl',
-function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarcodeScanner, uiGmapGoogleMapApi) {
+function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarcodeScanner, $cordovaGeolocation, uiGmapGoogleMapApi, $cordovaToast) {
   // Show the loading overlay and text
-  $ionicLoading.show({
+  var loadingOptions = {
     // The text to display in the loading indicator
     template: 'Loading',
     hideOnStateChange: true,
-  });
+  };
 
   // get the collection from our data definitions
   var restaurants = new (Parse.Collection.getClass("Restaurant"));
@@ -20,15 +20,19 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
   // setup barcode scanner
   $ionicPlatform.ready(function() {
     $scope.scan = function() {
-      $cordovaBarcodeScanner
-      .then(function(barcodeData) {
+      $cordovaBarcodeScanner.scan().then(function(barcodeData) {
         // Success! Barcode data is here
         // Go to barcodeData
         if (barcodeData.type === BarcodeScanner.Encode.QR_TYPE) {
           $state.go(barcodeData.text);
         } else {
-          // TODO: display an error?
-          $scope.scan();
+          // display an error
+          $cordovaToast.showShortCenter("I can't recognize the code. Please try again.").then(function(success) {
+            // success
+            $scope.scan();
+          }, function (error) {
+            // error
+          });
         }
       }, function(error) {
         // An error occurred
@@ -51,6 +55,7 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
     markers: initialMarkers,
     doCluster: true,
     doRebuildAll: true,
+    bounds: {},
     clusterOptions: {
       title: 'More restaurants here',
       gridSize: 60,
@@ -59,6 +64,12 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
       imageExtension: 'png',
       imagePath: 'img/localGroup',
       imageSizes: [32]
+    },
+    options: {
+      streetViewControl:false,
+      zoomControl:false,
+      panControl: false,
+      mapTypeControl: false
     }
   };
     // load restaurants with geolocation
@@ -104,25 +115,56 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
       $ionicLoading.hide();
     };
 
-    // HTML5 geolocation
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        $rootScope.currentPosition = position;
-        $scope.map.zoom = 12;
-        $scope.map.center = createPoint(position.coords);
-
-        // reload restaurants from location
-        //$ionicLoading.show(loadingOptions);
-        restaurants.loadRestaurantsWithinGeoBox(position.coords).then(updateMarkers);
-      }, loadAllRestaurants);
-    } else {
-      loadAllRestaurants();
+    var displayRestaurantsOnMap = function() {
+      console.log('displaying restaurants', $scope.map.bounds);
+      $ionicLoading.show(loadingOptions);
+      restaurants.loadRestaurantsWithinGeoBox($scope.map.bounds.southwest, $scope.map.bounds.northeast).then(updateMarkers);
     }
+    // watch the bounds of the map
+    $scope.$watch(function() {
+      return $scope.map.bounds;
+    }, function(nv, ov) {
+      if (nv && nv.southwest) {
+        displayRestaurantsOnMap();
+      }
+    }, true);
+
+    $ionicPlatform.ready(function() {
+      if ($cordovaGeolocation) {
+        $cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true}).then(function(position) {
+          $rootScope.currentPosition = position;
+          $scope.map.zoom = 12;
+          $scope.map.center = createPoint(position.coords);
+
+          // reload restaurants from location
+          displayRestaurantsOnMap();
+        }, function(err) {
+          console.log(err);
+          //loadAllRestaurants();
+        });
+      } else {
+        // navigator
+        // HTML5 geolocation.
+        if(navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            $rootScope.currentPosition = position;
+            $scope.map.zoom = 12;
+            $scope.map.center = createPoint(position.coords);
+
+            // reload restaurants from location
+            displayRestaurantsOnMap();
+          });
+          //}, loadAllRestaurants);
+        } else {
+          //loadAllRestaurants();
+        }
+      }
+    });
   });
 })
 
 .controller('RestaurantListCtrl',
-  function($scope, $rootScope, $stateParams, $ionicNavBarDelegate) {
+  function($scope, $rootScope, $stateParams, $ionicNavBarDelegate, $cordovaToast) {
     var restaurants = new (Parse.Collection.getClass("Restaurant"));
 
     Parse.Cloud.run('priceranges', null, {
@@ -171,7 +213,8 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
     } else if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition($scope.refreshRestaurants);
     } else {
-      // TODO: error message? Alphabetical list?
+      // error message TODO: Alphabetical list?
+      $cordovaToast.showShortCenter("Error finding your position");
     }
 
 })

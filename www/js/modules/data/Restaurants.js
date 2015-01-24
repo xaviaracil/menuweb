@@ -55,9 +55,13 @@ angular.module('menuweb.models.Restaurants', ['parse-angular.enhance'])
 			// use the enhanced load() function to fetch the collection
 			return this.fetch();
 		},
-		loadRestaurantsWithinGeoBox: function(point) {
+		loadRestaurantsWithinGeoBox: function(point1, point2) {
 			this.query = (new Parse.Query(Restaurant));
-			this.query.withinKilometers('location', point, this.withinKilometers);
+			if (point2) {
+				this.query.withinGeoBox('location', point1, point2);
+			} else {
+				this.query.withinKilometers('location', point1, this.withinKilometers);
+			}
 			return this.fetch();
 		},
 		loadRestaurantsWithinGeoBoxAndCategories: function(point, categories) {
