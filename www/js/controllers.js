@@ -23,11 +23,12 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
       $cordovaBarcodeScanner.scan().then(function(barcodeData) {
         // Success! Barcode data is here
         // Go to barcodeData
-        if (barcodeData.type === BarcodeScanner.Encode.QR_TYPE) {
-          $state.go(barcodeData.text);
+        var matchData = barcodeData.text.match(/http:\/\/menu-web\.laibeth\.com\/#\/restaurants\/(\w+)$/);
+        if (matchData && matchData[1]) {
+          $state.go('restaurant', {restaurantId: matchData[1]});
         } else {
-          // display an error
-          $cordovaToast.showShortCenter("I can't recognize the code. Please try again.").then(function(success) {
+            // display an error
+          $cordovaToast.showLongCenter("I can't recognize the code. Please try again.").then(function(success) {
             // success
             $scope.scan();
           }, function (error) {
@@ -36,6 +37,7 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
         }
       }, function(error) {
         // An error occurred
+        $cordovaToast.showShortCenter("Error scaning code. Please try again." + error);
       });
     };
   });
@@ -116,7 +118,7 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
     };
 
     var displayRestaurantsOnMap = function() {
-      console.log('displaying restaurants', $scope.map.bounds);
+      // console.log('displaying restaurants', $scope.map.bounds);
       $ionicLoading.show(loadingOptions);
       restaurants.loadRestaurantsWithinGeoBox($scope.map.bounds.southwest, $scope.map.bounds.northeast).then(updateMarkers);
     }
@@ -140,7 +142,8 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
           displayRestaurantsOnMap();
         }, function(err) {
           console.log(err);
-          //loadAllRestaurants();
+          $cordovaToast.showShortCenter("Error getting location. Please try again.");
+            //loadAllRestaurants();
         });
       } else {
         // navigator
