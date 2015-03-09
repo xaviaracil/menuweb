@@ -98,25 +98,30 @@ h2.title {
     padding: 10px 2% 0;
 	color: #555a5d
 }
-.list .item-avatar img:first-child, .list .item-avatar .item-img {
+.item-avatar .item-content img:first-child, .item-avatar .item-content .item-img {
 	border-radius: 2px;
 	max-width: 50px;
 	max-height: 50px;
 }
+
 ul.list li {
 
 }
-ul.list li h2 {
+ul.list li h2,
+.item-content h2 {
 	position: relative;
 }
-ul.list li h4 {
+ul.list li h4,
+.item-content h4{
 	color: rgba(0, 103, 180, 0.75);
 	margin-right: 5px;
 }
-ul.list li h2, ul.list li h4 {
+ul.list li h2, ul.list li h4,
+.item-content h2, .item-content h4 {
 	margin-bottom: 1px;
 }
-ul.list li h4.detall {
+ul.list li h4.detall,
+.item-content h4.detall {
 	position: absolute;
 	right: 10%;
 	top: 20px;
@@ -231,4 +236,12 @@ a.item:after, button.item:after, .item a[href].item-content:after,
     font-family: 'Ionicons';
     line-height: 1;
     speak: none;
+}
+
+/**
+ * ion-item content word wrapping
+ */
+ .item h1, .item h2, .item h3, .item h4, .item h5, .item h6, .item p, .item-content h1, .item-content h2, .item-content h3, .item-content h4, .item-content h5, .item-content h6, .item-content p {
+     white-space: normal;
+     max-width: 83%;
 }

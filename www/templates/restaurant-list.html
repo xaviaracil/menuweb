@@ -9,16 +9,14 @@
         pulling-text="Pull to refresh..."
         on-refresh="refreshRestaurants()">
     </ion-refresher>
-    <ion-list>
-      <ion-item ng-repeat="rest in restaurants"
-                class="item item-avatar"
-                ui-sref="restaurant({restaurantId: rest.id})">
-        <img ng-src="{{ rest.logoUrl }}">
-        <h2>{{ rest.name }}</h2>
-        <h4 class="detall">{{ rest.distance | number:3 | distance }}</h4>
-        <h4>{{ rest.priceRange | name:priceranges }}</h4>
-      </ion-item>
+    <ion-item collection-repeat="rest in restaurants"
+              class="item item-avatar"
+              ui-sref="restaurant({restaurantId: rest.id})">
+      <img ng-src="{{ rest.logoUrl }}">
+      <h2>{{ rest.name }}</h2>
+      <h4 class="detall">{{ rest.distance | number:3 | distance }}</h4>
+      <h4>{{ rest.priceRange | name:priceranges }}</h4>
+    </ion-item>
 <!-- TODO: infinite scroll + categoria -->
-    </ion-list>
   </ion-content>
 </ion-view>
