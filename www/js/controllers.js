@@ -74,6 +74,14 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
       zoomControl:false,
       panControl: false,
       mapTypeControl: false
+    },
+    events: {
+      'click': function() {
+        _($scope.map.markers).forEach(function(m) {
+          m.show = false;
+        });
+        $scope.$apply();
+      }
     }
   };
     // load restaurants with geolocation
@@ -104,7 +112,7 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
           options: {
             boxClass:'infowindow',
             pixelOffset: {
-              height: -80,
+              height: -100,
               width: -32
             },
             closeBoxURL:''

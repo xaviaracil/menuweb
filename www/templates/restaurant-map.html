@@ -12,7 +12,7 @@
   </ion-nav-buttons>
 
   <ion-content scroll="false" data-tap-disabled="true">
-    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true" options='map.options' pan="true" bounds="map.bounds" ngCloak>
+    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true" options='map.options' pan="true" bounds="map.bounds" events='map.events' ngCloak>
       <ui-gmap-markers models="map.markers" coords="'location'" doRebuildAll="map.doRebuildAll" click="'onClick'" icon="'icon'"
       doCluster="map.doCluster" clusterOptions="map.clusterOptions">
         <ui-gmap-windows coords="'location'" show="'show'" templateParameter="'templateParameter'" templateUrl="'templateUrl'" options="'options'" ngCloak>
