@@ -73,14 +73,22 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
       streetViewControl:false,
       zoomControl:false,
       panControl: false,
-      mapTypeControl: false
+      mapTypeControl: false,
+      styles: [
+        {
+          "featureType": "poi",
+          "stylers": [
+            { "visibility": "off" }
+          ]
+        }
+      ]
     },
     events: {
       'click': function() {
         _($scope.map.markers).forEach(function(m) {
           m.show = false;
+          $scope.$apply();
         });
-        $scope.$apply();
       }
     }
   };
@@ -115,7 +123,8 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
               height: -80,
               width: -32
             },
-            closeBoxURL:''
+            closeBoxURL:'',
+            disableAutoPan: true
           }
         };
         marker.onClick = function() {
