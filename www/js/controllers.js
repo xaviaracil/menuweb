@@ -112,7 +112,7 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
           options: {
             boxClass:'infowindow',
             pixelOffset: {
-              height: -100,
+              height: -80,
               width: -32
             },
             closeBoxURL:''
