@@ -21,19 +21,21 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
   $ionicPlatform.ready(function() {
     $scope.scan = function() {
       $cordovaBarcodeScanner.scan().then(function(barcodeData) {
-        // Success! Barcode data is here
-        // Go to barcodeData
-        var matchData = barcodeData.text.match(/http:\/\/menu-web\.laibeth\.com\/#\/restaurants\/(\w+)$/);
-        if (matchData && matchData[1]) {
-          $state.go('restaurant', {restaurantId: matchData[1]});
-        } else {
-            // display an error
-          $cordovaToast.showLongCenter("I can't recognize the code. Please try again.").then(function(success) {
-            // success
-            $scope.scan();
-          }, function (error) {
-            // error
-          });
+        if (!barcodeData.cancelled) {
+          // Success! Barcode data is here
+          // Go to barcodeData
+          var matchData = barcodeData.text.match(/http:\/\/menu-web\.laibeth\.com\/#\/restaurants\/(\w+)$/);
+          if (matchData && matchData[1]) {
+            $state.go('restaurant', {restaurantId: matchData[1]});
+          } else {
+              // display an error
+            $cordovaToast.showLongCenter("I can't recognize the code. Please try again.").then(function(success) {
+              // success
+              $scope.scan();
+            }, function (error) {
+              // error
+            });
+          }
         }
       }, function(error) {
         // An error occurred
@@ -187,11 +189,18 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
           distance: currentGeoPoint.kilometersTo(restaurant.getLocation())
         };
       });
+      $scope.$broadcast('scroll.refreshComplete');
     };
 
     $scope.refreshRestaurants = function(position) {
-      $rootScope.currentPosition = position;
+      console.log('refreshRestaurants', position);
+      if (position) {
+        $rootScope.currentPosition = position;
+      } else {
+        position = $rootScope.currentPosition;
+      }
       var point = position.coords;
+      console.log(point);
 
       if ($stateParams.categories) {
         var categories = _.map($stateParams.categories.split(','), function(id) {
@@ -219,11 +228,10 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
       // error message TODO: Alphabetical list?
       $cordovaToast.showShortCenter("Error finding your position");
     }
-
 })
 
 .controller('RestaurantCtrl',
-  function($scope, $rootScope, $state, $stateParams, $ionicLoading) {
+  function($scope, $rootScope, $state, $stateParams, $cordovaSocialSharing) {
     Parse.Cloud.run('priceranges', null, {
       success: function(foundPriceRanges) {
         $scope.priceranges = _.map(foundPriceRanges, function(priceRange) {
@@ -248,6 +256,18 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
       $rootScope.currentRestaurant = rest;
       $state.go('restaurant.menu', {currentRestaurantId: rest.id});
     };
+
+    // Share via native share sheet
+    /*
+    $scope.share = function() {
+      $cordovaSocialSharing
+          .share('Check out this restaurant', null, null, 'http://menu-web.laibeth.com/#/restaurants/' + $scope.rest.id)
+          .then(function(result) {
+            // Success!
+          }, funtion(err) {
+            // An error occured. Show a message to the user
+          });
+    };*/
 })
 
 .controller('RestaurantMenuCtrl',

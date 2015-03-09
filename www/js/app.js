@@ -132,12 +132,23 @@ angular.module('menuweb', ['ionic',
   $urlRouterProvider.otherwise('/');
 })
 
-.run(['$rootScope', '$state', '$stateParams',
- function($rootScope, $state, $stateParams) {
+.run(function($rootScope, $state, $stateParams, $ionicPlatform) {
    $rootScope.$state = $state;
    $rootScope.$stateParams = $stateParams;
 
    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams, error){
      $rootScope.lastState = { state: fromState, params: fromParams }
-   });   
-}]);
+   });
+
+   $ionicPlatform.ready(function() {
+     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+     // for form inputs)
+     if (window.cordova && window.cordova.plugins.Keyboard) {
+       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+     }
+     if (window.StatusBar) {
+       // org.apache.cordova.statusbar required
+       StatusBar.styleDefault();
+     }
+   });
+});
