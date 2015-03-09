@@ -13,7 +13,7 @@ angular.module('menuweb.models.TranslatedDish', ['parse-angular.enhance'])
 	var TranslatedDish = Parse.Object.extend({
 		className:'TranslatedDish',
 		// Extend the object with getter and setters
-		attrs: ["name", "translation", "dish"]
+		attrs: ["name", "translation", "description", "dish"]
 	});
 
 	// --------------------------

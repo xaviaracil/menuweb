@@ -193,14 +193,12 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
     };
 
     $scope.refreshRestaurants = function(position) {
-      console.log('refreshRestaurants', position);
       if (position) {
         $rootScope.currentPosition = position;
       } else {
         position = $rootScope.currentPosition;
       }
       var point = position.coords;
-      console.log(point);
 
       if ($stateParams.categories) {
         var categories = _.map($stateParams.categories.split(','), function(id) {
@@ -258,16 +256,15 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
     };
 
     // Share via native share sheet
-    /*
     $scope.share = function() {
       $cordovaSocialSharing
           .share('Check out this restaurant', null, null, 'http://menu-web.laibeth.com/#/restaurants/' + $scope.rest.id)
           .then(function(result) {
             // Success!
-          }, funtion(err) {
+          }, function(err) {
             // An error occured. Show a message to the user
           });
-    };*/
+    };
 })
 
 .controller('RestaurantMenuCtrl',
@@ -366,7 +363,7 @@ function($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaBarc
         return {
           id: dish.id,
           name: dish.getName(),
-          description: dish.getDish().get('description'),
+          description: dish.getDescription() !== null ? dish.getDescription() : dish.getDish().get('description'),
           price: dish.getDish().get('price')
         };
       });
