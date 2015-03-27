@@ -7,5 +7,7 @@ Tu mejor compañero de viaje.
 
 [http://menu-web.laibeth.com]()
 
+Landing page in [http://menu-web.cottonfields.es]()
+
 App made with [Ionic Framework](http://ionicframework.com/).
 
