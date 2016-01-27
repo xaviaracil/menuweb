@@ -7,8 +7,8 @@ angular.module('menuweb.controllers', [])
 
         $scope.rightButtons = [
             {
-                type: 'button-clear',
-                content: '<i class="icon ion-gear-a"></i>',
+                type: 'button-icon',
+                content: '<i class="icon ion-navicon"></i>',
                 tap: function(e) {
                     $scope.sideMenuController.toggleRight();
                 }
